@@ -2,12 +2,12 @@
 using Mono.Btls;
 using Mono.Net.Security;
 using Mono.Unity;
+using ShinyShoe;
+using ShinyShoe.AnalyticsTracking;
 using System;
-using System.Reflection;
 
 namespace InkboundModEnabler {
     public static class Patches {
-        public static Harmony HarmonyInstance => new Harmony("ADDB.InkboundModEnabler");
         [HarmonyPatch(typeof(Mono.Net.Security.MonoTlsProviderFactory))]
         public static class MonoTlsProviderFactory_Patch {
             [HarmonyPatch(nameof(Mono.Net.Security.MonoTlsProviderFactory.CreateDefaultProviderImpl))]
@@ -40,9 +40,24 @@ IL_6E:
                 return false;
             }
         }
-
-        public static void Patch() {
-            HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
+        // Disable Analytics
+        [HarmonyPatch(typeof(AnalyticsHelper))]
+        public static class AnalyticsHelper_Patch {
+            [HarmonyPatch(nameof(AnalyticsHelper.Configure))]
+            [HarmonyPrefix]
+            public static bool Configure() {
+                Analytics.EnableTracking(false);
+                return false;
+            }
+        }
+        // Disable Crash Reports
+        [HarmonyPatch(typeof(ErrorTrackingState))]
+        public static class ErrorTrackingState_Patch {
+            [HarmonyPatch(nameof(ErrorTrackingState.DoesThisBuildReportErrors))]
+            public static bool DoesThisBuildReportErrors(ref bool __result) {
+                __result = false;
+                return false;
+            }
         }
     }
 }

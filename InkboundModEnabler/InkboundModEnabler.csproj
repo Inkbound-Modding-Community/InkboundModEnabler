@@ -93,6 +93,10 @@
       <HintPath>$(InkboundInstallDir)\Inkbound_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Assembly-CSharp">
+		<HintPath>$(SolutionDir)lib\Assembly-CSharp_public.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -100,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <PubliciseInputAssemblies Include="$(InkboundInstallDir)\Inkbound_Data\Managed\System.dll" />
+	<PubliciseInputAssemblies Include="$(InkboundInstallDir)\Inkbound_Data\Managed\Assembly-CSharp.dll" />
   </ItemGroup>
   <Target Name="Publicise" AfterTargets="BeforeBuild;Clean" Inputs="@(PubliciseInputAssemblies)" Outputs="$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.dll;$(SolutionDir)lib\ToyBox\%(PubliciseInputAssemblies.FileName)_public.hash">
     <MakeDir Directories="$(SolutionDir)lib/" />
