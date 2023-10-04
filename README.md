@@ -6,7 +6,7 @@ Inkbound/
 
 ├── BepInEx/ (Put here by you)
 
-│   (a few directories)
+│ └── (a few subdirectories)
 
 ├── doorstop_config.ini			(Put here by you)
 
