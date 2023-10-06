@@ -46,10 +46,10 @@ Inkbound/
 This mod provides the following config settings:
 
 - ForceOfflineMode
-<br />Default: false<br />Force the game to start in offline mode.
+<br />**Default:** false<br />**Description:** Force the game to start in offline mode.
 
 - OverwriteSavedOfflineRun
-<br />Default: false<br />Set to true to always copy the latest online data even if there is an in-progress offline run (which will then be deleted).
+<br />**Default:** false<br />**Description:** Set to true to always copy the latest online data even if there is an in-progress offline run (which will then be deleted).
 
 - ReportOnline
-<br />Default: false<br />When this is disabled, offline runs are kept separately in a way that they won't be reported after going back online. This is to prevent any kind of data/synchronization/verification problems. If you're playing with cheats/game changing mods this should be disabled!
+<br />**Default:** false<br />**Description:** When this is disabled, offline runs are kept separately in a way that they won't be reported after going back online. This is to prevent any kind of data/synchronization/verification problems. If you're playing with cheats/game changing mods this should be disabled!
