@@ -9,13 +9,16 @@ using System.Reflection;
 
 namespace InkboundModEnabler {
     public static class VestigeUtils {
-        public static VestigeDataContainer instance;
+        internal static VestigeDataContainer _instance;
+        public static VestigeDataContainer instance {
+            get {
+                _instance ??= VestigeDataContainer.VestigeUtilsDumper.loadDump();
+                return _instance;
+            }
+        }
         public static List<AssetLibrary> assetLibraryList = new();
         public static void RegisterNewEquipmentData(this ShinyShoe.Ares.SharedSOs.EquipmentData data) {
             throw new NotImplementedException();
-        }
-        public static void Init() {
-            instance ??= VestigeDataContainer.VestigeUtilsDumper.loadDump();
         }
         #region getter
         public static ShinyShoe.Ares.SharedSOs.LootTableData getLootTableDataByName(string InternalName) {
@@ -145,7 +148,11 @@ namespace InkboundModEnabler {
                             writter.WriteLine(JsonConvert.SerializeObject(instance, typeof(VestigeUtils), Formatting.Indented, new()));
                         }
                     } catch (Exception ex) {
-                        InkboundModEnabler.log.LogError(ex.ToString());
+                        if (InkboundModEnabler.log != null) {
+                            InkboundModEnabler.log.LogError(ex.ToString());
+                        } else {
+                            InkboundModEnabler.logBuffer += ex.ToString() + "\n";
+                        }
                     }
                 }
                 internal static VestigeDataContainer loadDump() {
@@ -160,8 +167,13 @@ namespace InkboundModEnabler {
                                 ret = JsonConvert.DeserializeObject<VestigeDataContainer>(reader.ReadToEnd(), new());
                             }
                         } catch (Exception ex) {
-                            InkboundModEnabler.log.LogError("Critical Error: Failed to load Vestige dump!");
-                            InkboundModEnabler.log.LogError(ex.ToString());
+                            if (InkboundModEnabler.log != null) {
+                                InkboundModEnabler.log.LogError("Critical Error: Failed to load Vestige dump!");
+                                InkboundModEnabler.log.LogError(ex.ToString());
+                            } else {
+                                InkboundModEnabler.logBuffer += "Critical Error: Failed to load Vestige dump!\n";
+                                InkboundModEnabler.logBuffer += ex.ToString() + "\n";
+                            }
                         }
                     }
                     return ret ?? new();

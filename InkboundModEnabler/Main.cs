@@ -19,12 +19,15 @@ namespace InkboundModEnabler {
         public static ManualLogSource log;
         public static InkboundModEnabler instance;
         public static ConfigFile conf;
+        public static string logBuffer = "";
         public static Harmony HarmonyInstance => new Harmony(PLUGIN_GUID);
         private void Awake() {
             instance = this;
             log = Logger;
+            if (!logBuffer.IsNullOrWhiteSpace()) {
+                log.LogError(logBuffer);
+            }
             conf = Config;
-            VestigeUtils.Init();
             HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
         }
     }
