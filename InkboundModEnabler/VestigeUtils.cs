@@ -177,6 +177,7 @@ namespace InkboundModEnabler {
                     assetLibraryList.Add(__instance);
                 }
                 [HarmonyPatch(nameof(AssetLibrary.Initialize))]
+                [HarmonyPriority(Priority.VeryHigh)]
                 [HarmonyPostfix]
                 private static void Initialize_Post(AssetLibrary __instance) {
                     if (VestigeDataContainer.VestigeUtilsDumper.shouldDump) {
