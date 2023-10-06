@@ -23,3 +23,15 @@ Inkbound/
 ├── Inkbound_Data/
 
 └── Inkbound_BurstDebugInformation_DoNotShip/
+
+Changelog:
+
+## Version 1.1.1 (Early Access Patch 0.2.9)
+- Added basic VestigeUtils
+- Change project layout
+
+## Version 1.1 (Early Access Patch 0.2.9)
+- Disabled Crash Reports and Analytics
+
+## Version 1.0 (Early Access Patch 0.2.8)
+- Initial Release
