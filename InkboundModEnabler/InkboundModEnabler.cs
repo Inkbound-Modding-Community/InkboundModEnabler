@@ -1,13 +1,52 @@
-﻿using HarmonyLib;
+﻿using BepInEx;
+using BepInEx.Configuration;
+using BepInEx.Logging;
+using HarmonyLib;
 using Mono.Btls;
 using Mono.Net.Security;
 using Mono.Unity;
 using ShinyShoe;
 using ShinyShoe.AnalyticsTracking;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+
+
 
 namespace InkboundModEnabler {
-    public static class Patches {
+    [BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
+    class InkboundModEnabler : BaseUnityPlugin {
+        public const string PLUGIN_GUID = "ADDB.InkboundModEnabler";
+        public const string PLUGIN_NAME = "Inkbound Mod Enabler";
+        public const string PLUGIN_VERSION = "1.1.2";
+        public static ManualLogSource log;
+        public static InkboundModEnabler instance;
+        public static Settings settings;
+        public static ConfigFile conf;
+        public static bool needForceOffline = false;
+        public static string logBuffer = "";
+        public static Harmony HarmonyInstance => new Harmony(PLUGIN_GUID);
+        private void Awake() {
+            try {
+                instance = this;
+                log = Logger;
+                if (!logBuffer.IsNullOrWhiteSpace()) {
+                    log.LogError(logBuffer);
+                }
+                conf = Config;
+                settings = new();
+                HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
+                new ForceOffline();
+            } catch (Exception e) {
+                log.LogError(e);
+            }
+        }
+        private void Update() {
+        }
+        #region ModEnablerPatches
+        // Make unstripped assemblies work
         [HarmonyPatch(typeof(Mono.Net.Security.MonoTlsProviderFactory))]
         public static class MonoTlsProviderFactory_Patch {
             [HarmonyPatch(nameof(Mono.Net.Security.MonoTlsProviderFactory.CreateDefaultProviderImpl))]
@@ -59,5 +98,6 @@ IL_6E:
                 return false;
             }
         }
+        #endregion
     }
 }
