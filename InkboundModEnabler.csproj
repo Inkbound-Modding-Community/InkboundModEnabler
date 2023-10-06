@@ -3,9 +3,10 @@
 		<TargetFramework>net472</TargetFramework>
 		<AssemblyName>InkboundModEnabler</AssemblyName>
 		<Description>BlupDuBlup</Description>
-		<Version>1.1.2</Version>
+		<Version>1.1.3</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	</PropertyGroup>
 	<PropertyGroup>
 		<InkboundInstallDir Condition=" '$(InkboundInstallDir)' == '' ">D:\Games\Steam\steamapps\common\Inkbound</InkboundInstallDir>

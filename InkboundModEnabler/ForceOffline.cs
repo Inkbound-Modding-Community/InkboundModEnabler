@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using BepInEx;
+using HarmonyLib;
+using InkboundModEnabler.Util;
 using ShinyShoe;
 using ShinyShoe.Ares;
 using System;
@@ -13,6 +15,7 @@ using UnityEngine;
 namespace InkboundModEnabler {
     public class ForceOffline {
         public static ForceOffline instance;
+        private static readonly List<string> excluded = new() { "BepInEx.BaseUnityPlugin", "UnityExplorer.ExplorerBepInPlugin" };
         public static string persistentPath = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "persistent_data");
         internal static bool needForceOffline => InkboundModEnabler.settings.ForceOfflineMode.Value || InkboundModEnabler.needForceOffline;
         internal static bool shouldReportOnline => InkboundModEnabler.settings.ReportOnline.Value && !InkboundModEnabler.needForceOffline;
@@ -64,6 +67,26 @@ namespace InkboundModEnabler {
         }
         [HarmonyPatch(typeof(OfflineModeSystem))]
         public static class OfflineModeSystem_Patch {
+            [HarmonyPatch(nameof(OfflineModeSystem.Initialize))]
+            [HarmonyPrefix]
+            public static void Initialize() {
+                foreach (var ass in AppDomain.CurrentDomain.GetAssemblies()) {
+                    foreach (var t in ass.GetTypes()) {
+                        if (typeof(BaseUnityPlugin).IsAssignableFrom(t)) {
+                            if (t.IsDefined(typeof(CosmeticPluginAttribute))) {
+                                InkboundModEnabler.log.LogInfo($"Encountered plugin {t.FullName} with defined CosmeticPlugin Attribute.");
+                            } else {
+                                if (excluded.Contains(t.FullName)) {
+                                    InkboundModEnabler.log.LogInfo($"Encountered plugin excluded from check {t.FullName}");
+                                } else {
+                                    InkboundModEnabler.log.LogWarning($"Encountered non-cosmetic plugin {t.FullName}; Forcing offline mode!");
+                                    InkboundModEnabler.needForceOffline = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             [HarmonyPatch(nameof(OfflineModeSystem.GetFullSaveDir))]
             [HarmonyPrefix]
             public static bool GetFullSaveDir(ref string __result) {

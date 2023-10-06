@@ -29,6 +29,9 @@ Inkbound/
 
 ### Changelog:
 
+## Version 1.1.3 (Early Access Patch 0.2.9)
+- Added opt-out Force Offline; meaning if any unknown mod without the [CosmeticPlugin] Attribute is encountered the game will automatically enter Forced Offline mode
+
 ## Version 1.1.2 (Early Access Patch 0.2.9)
 - Integrate force offline functionality
 

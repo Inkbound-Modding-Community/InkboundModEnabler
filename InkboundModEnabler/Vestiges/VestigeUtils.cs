@@ -48,7 +48,7 @@ namespace InkboundModEnabler {
             newEntry.asset.IsLoaded = true;
             var assetID = new AssetID(data.fileID, data.Guid);
             newEntry.classType = typeof(ShinyShoe.Ares.SharedSOs.EquipmentData);
-            newEntry.className = "???";
+            newEntry.className = "ShinyShoe.Ares.SharedSOs.EquipmentData";
             newEntry.assetID = assetID;
             newEntry.name = data.m_Name;
             foreach (var assetLib in assetLibraryList) {

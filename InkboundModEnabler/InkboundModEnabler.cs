@@ -2,6 +2,7 @@
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using InkboundModEnabler.Util;
 using Mono.Btls;
 using Mono.Net.Security;
 using Mono.Unity;
@@ -17,15 +18,16 @@ using System.Reflection;
 
 namespace InkboundModEnabler {
     [BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
+    [CosmeticPlugin]
     class InkboundModEnabler : BaseUnityPlugin {
         public const string PLUGIN_GUID = "ADDB.InkboundModEnabler";
         public const string PLUGIN_NAME = "Inkbound Mod Enabler";
-        public const string PLUGIN_VERSION = "1.1.2";
+        public const string PLUGIN_VERSION = "1.1.3";
         public static ManualLogSource log;
         public static InkboundModEnabler instance;
         public static Settings settings;
         public static ConfigFile conf;
-        public static bool needForceOffline = false;
+        internal static bool needForceOffline = false;
         public static string logBuffer = "";
         public static Harmony HarmonyInstance => new Harmony(PLUGIN_GUID);
         private void Awake() {
