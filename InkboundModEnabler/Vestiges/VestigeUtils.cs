@@ -44,6 +44,7 @@ namespace InkboundModEnabler {
             if (data.m_Name.IsNullOrWhiteSpace()) data.m_Name = data.Name;
             AssetLibraryManifest.Entry newEntry = new();
             newEntry.asset = data;
+            newEntry.dataId = data.Guid;
             newEntry.asset.IsLoaded = true;
             var assetID = new AssetID(data.fileID, data.Guid);
             newEntry.classType = typeof(ShinyShoe.Ares.SharedSOs.EquipmentData);
@@ -54,6 +55,7 @@ namespace InkboundModEnabler {
                 assetLib._manifest.entries.Add(newEntry);
                 assetLib._nameToEntry[data.name] = newEntry;
                 assetLib._assetIDToEntry[assetID] = newEntry;
+                assetLib._dataIdToEntry[newEntry.dataId] = newEntry;
                 List<AssetLibraryManifest.Entry> list;
                 if (!assetLib._baseDataTypeToEntries.TryGetValue(newEntry.classType, out list)) {
                     list = new List<AssetLibraryManifest.Entry>();
@@ -63,8 +65,13 @@ namespace InkboundModEnabler {
                 _instance.EquipmentDataGUID_To_AssetID[data.Guid] = assetID;
                 _instance.EquipmentDataName_To_AssetID[data.name] = assetID;
                 _instance.EquipmentDisplayName_To_AssetID[data.Name] = assetID;
-
             }
+            var key = Assembly.GetCallingAssembly().FullName;
+            if (!instance.CustomVestigesByAssembly.TryGetValue(key, out var lst)) {
+                lst = new();
+            }
+            lst.Add(newEntry.dataId);
+            instance.CustomVestigesByAssembly[key] = lst;
         }
         #region getter
         public static ShinyShoe.Ares.SharedSOs.LootTableData getLootTableDataByName(string InternalName) {
@@ -170,19 +177,20 @@ namespace InkboundModEnabler {
         [Serializable]
         public sealed class VestigeDataContainer {
             [JsonProperty("LootTableName_To_AssetID")]
-            internal SerializableDictionary<string, AssetID> LootTableName_To_AssetID = new();
+            internal Util.SerializableDictionary<string, AssetID> LootTableName_To_AssetID = new();
             [JsonProperty("LootTableGUID_To_AssetID")]
-            internal SerializableDictionary<string, AssetID> LootTableGUID_To_AssetID = new();
+            internal Util.SerializableDictionary<string, AssetID> LootTableGUID_To_AssetID = new();
             [JsonProperty("LootListName_To_AssetID")]
-            internal SerializableDictionary<string, AssetID> LootListName_To_AssetID = new();
+            internal Util.SerializableDictionary<string, AssetID> LootListName_To_AssetID = new();
             [JsonProperty("LootListGUID_To_AssetID")]
-            internal SerializableDictionary<string, AssetID> LootListGUID_To_AssetID = new();
+            internal Util.SerializableDictionary<string, AssetID> LootListGUID_To_AssetID = new();
             [JsonProperty("EquipmentDataName_To_AssetID")]
-            internal SerializableDictionary<string, AssetID> EquipmentDataName_To_AssetID = new();
+            internal Util.SerializableDictionary<string, AssetID> EquipmentDataName_To_AssetID = new();
             [JsonProperty("EquipmentDisplayName_To_AssetID")]
-            internal SerializableDictionary<string, AssetID> EquipmentDisplayName_To_AssetID = new();
+            internal Util.SerializableDictionary<string, AssetID> EquipmentDisplayName_To_AssetID = new();
             [JsonProperty("EquipmentDataGUID_To_AssetID")]
-            internal SerializableDictionary<string, AssetID> EquipmentDataGUID_To_AssetID = new();
+            internal Util.SerializableDictionary<string, AssetID> EquipmentDataGUID_To_AssetID = new();
+            internal Util.SerializableDictionary<string, List<string>> CustomVestigesByAssembly = new();
 
             internal static class VestigeUtilsDumper {
                 internal static bool shouldDump = false;

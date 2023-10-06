@@ -3,7 +3,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace InkboundModEnabler {
+namespace InkboundModEnabler.Util {
     [XmlRoot("SerializableDictionary")]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable {
         public SerializableDictionary() : base() { }

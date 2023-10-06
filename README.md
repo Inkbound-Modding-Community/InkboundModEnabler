@@ -26,6 +26,9 @@ Inkbound/
 
 Changelog:
 
+## Version 1.1.2 (Early Access Patch 0.2.9)
+- Integrate force offline functionality
+
 ## Version 1.1.1 (Early Access Patch 0.2.9)
 - Added basic VestigeUtils
 - Change project layout
