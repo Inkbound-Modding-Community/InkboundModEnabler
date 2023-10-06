@@ -26,8 +26,16 @@ namespace InkboundModEnabler {
             eq.description = "Test Description";
             eq.equipmentType = ShinyShoe.Ares.EquipmentType.Accessory;
             eq.fileID = 0;
-            eq.guid = "CB90F870-D9FC-4F96-97F6-E18AEF2B7D79";
+            eq.guid = "CB90F870D9FC4F9697F6E18AEF2B7D79";
             return eq;
+        }
+        public static void AddEquipToDefaultVestigeList(ShinyShoe.Ares.SharedSOs.EquipmentData eq, int weight) {
+            ShinyShoe.Ares.SharedSOs.LootTicketData ticket = new();
+            ticket.tickets = weight;
+            ShinyShoe.Ares.SharedSOs.LootData ld = new();
+            ld.equipmentData = eq;
+            ticket.lootData = ld;
+            getLootListDataByName("AllVestigeList").lootTickets.Add(ticket);
         }
         public static void RegisterNewEquipmentData(this ShinyShoe.Ares.SharedSOs.EquipmentData data) {
             Assert.IsTrue(data != null);
@@ -218,59 +226,6 @@ namespace InkboundModEnabler {
                     return ret ?? new();
                     */
                     return new();
-                }
-            }
-        }
-        private static class VestigeUtilsPatches {
-            [HarmonyPatch(typeof(AssetLibrary))]
-            private static class AssetLibarary_Patch {
-                [HarmonyPatch(nameof(AssetLibrary.Initialize))]
-                [HarmonyPrefix]
-                private static void Initialize_Pre(AssetLibrary __instance) {
-                    assetLibraryList.Add(__instance);
-                }
-                [HarmonyPatch(nameof(AssetLibrary.Initialize))]
-                [HarmonyPriority(Priority.VeryHigh)]
-                [HarmonyPostfix]
-                private static void Initialize_Post(AssetLibrary __instance) {
-                    foreach (var pair in __instance._baseDataTypeToEntries) {
-                        if (pair.Key == typeof(ShinyShoe.Ares.SharedSOs.EquipmentData)) {
-                            foreach (var item in pair.Value) {
-                                try {
-                                    var equip = __instance.GetOrLoadAsset(item) as ShinyShoe.Ares.SharedSOs.EquipmentData;
-                                    instance.EquipmentDataGUID_To_AssetID[equip.Guid] = item.assetID;
-                                    instance.EquipmentDataName_To_AssetID[equip.name] = item.assetID;
-                                    if (!equip.Name.IsNullOrEmpty()) {
-                                        instance.EquipmentDisplayName_To_AssetID[equip.Name] = item.assetID;
-                                    }
-                                } catch (Exception e) {
-                                    InkboundModEnabler.log.LogError(e.ToString());
-                                }
-                            }
-                        }
-                        if (pair.Key == typeof(ShinyShoe.Ares.SharedSOs.LootListData)) {
-                            foreach (var item in pair.Value) {
-                                try {
-                                    var lootList = __instance.GetOrLoadAsset(item) as ShinyShoe.Ares.SharedSOs.LootListData;
-                                    instance.LootListGUID_To_AssetID[lootList.Guid] = item.assetID;
-                                    instance.LootListName_To_AssetID[lootList.name] = item.assetID;
-                                } catch (Exception e) {
-                                    InkboundModEnabler.log.LogError(e.ToString());
-                                }
-                            }
-                        }
-                        if (pair.Key == typeof(ShinyShoe.Ares.SharedSOs.LootTableData)) {
-                            foreach (var item in pair.Value) {
-                                try {
-                                    var lootTable = __instance.GetOrLoadAsset(item) as ShinyShoe.Ares.SharedSOs.LootTableData;
-                                    instance.LootTableGUID_To_AssetID[lootTable.Guid] = item.assetID;
-                                    instance.LootTableName_To_AssetID[lootTable.name] = item.assetID;
-                                } catch (Exception e) {
-                                    InkboundModEnabler.log.LogError(e.ToString());
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }
