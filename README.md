@@ -32,7 +32,7 @@ Inkbound/
 ## Version 1.2 (Early Access Patch 0.2.9)
 - Finished implementation of VestigeUtils.
 - Added the possibility to add new Vestiges by just adding a textfile and an image; no need for doing all the work that comes with creating a mod project!
-- TODO: Saving custom items in runs. Currently, while it does save the offline run, after loading into the run the custom Vestiges will have vanished.
+- TODO: Saving custom items in runs. Currently, while it does save the offline run, after loading into the run the custom Vestiges will have vanished. + Modyfing existing Vestiges.
 
 ## Version 1.1.3 (Early Access Patch 0.2.9)
 - Added opt-out Force Offline; meaning if any unknown mod without the [CosmeticPlugin] Attribute is encountered the game will automatically enter Forced Offline mode
