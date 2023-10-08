@@ -55,34 +55,22 @@ Plugin GUID: ADDB.InkboundModEnabler
 
 [Custom Content]
 
-This is where the mod will use as root to search for new Vestiges and as base path for their icons.
-<br/>Setting type: String
-<br/>Default value: D:\Games\Steam\steamapps\common\Inkbound\BepInEx\Custom\Vestiges
-<br/>customVestigeRootDirectory = D:\Games\Steam\steamapps\common\Inkbound\BepInEx\Custom\Vestiges
+customVestigeRootDirectory = D:\Games\Steam\steamapps\common\Inkbound\BepInEx\Custom\Vestiges
+<br/>This is where the mod will use as root to search for new Vestiges and as base path for their icons.
 
-Disable this to ignore possible existing custom Vestiges in the customVestigeRootDirectors.
-<br/>Setting type: Boolean
-<br/>Default value: true
-<br/>checkForCustomVestiges = true
+checkForCustomVestiges = true
+<br/>Disable this to ignore possible existing custom Vestiges in the customVestigeRootDirectors.
 
 [Force Offline]
 
-Force the game to start in offline mode
-<br/>Setting type: Boolean
-<br/>Default value: false
-<br/>ForceOfflineMode = false
+ForceOfflineMode = false
+<br/>Force the game to start in offline mode
 
-Set to true to always copy the latest online data even if there is an in-progress offline run (which will then be deleted).
-<br/>Setting type: Boolean
-<br/>Default value: false
-<br/>OverwriteSavedOfflineRun = false
+OverwriteSavedOfflineRun = false
+<br/>Set to true to always copy the latest online data even if there is an in-progress offline run (which will then be deleted).
 
-When this is disabled, offline runs are kept separately in a way that they won't be reported after going back online. This is to prevent any kind of data/synchronization/verification problems. If you're playing with cheats/game changing mods this should be disabled!
-<br/>Setting type: Boolean
-<br/>Default value: false
-<br/>ReportOnline = false
+ReportOnline = false
+<br/>When this is disabled, offline runs are kept separately in a way that they won't be reported after going back online. This is to prevent any kind of data/synchronization/verification problems. If you're playing with cheats/game changing mods this should be disabled!
 
-This is where Force Offline will save your offline runs when it is turned on.
-<br/>Setting type: String
-<br/>Default value: D:\Games\Steam\steamapps\common\Inkbound\BepInEx\plugins\InkboundModEnabler\persistent_data
-<br/>persistentPath = D:\Games\Steam\steamapps\common\Inkbound\BepInEx\plugins\InkboundModEnabler\persistent_datarted after going back online. This is to prevent any kind of data/synchronization/verification problems. If you're playing with cheats/game changing mods this should be disabled!
+persistentPath = D:\Games\Steam\steamapps\common\Inkbound\BepInEx\plugins\InkboundModEnabler\persistent_data
+<br/>When this is disabled, offline runs are kept separately in a way that they won't be reported after going back online. This is to prevent any kind of data/synchronization/verification problems. If you're playing with cheats/game changing mods this should be disabled!
