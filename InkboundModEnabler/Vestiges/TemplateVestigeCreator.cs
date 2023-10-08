@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace InkboundModEnabler.Vestiges {
     public static class TemplateVestigeCreator {
+        public static List<string> filesToCheck = new();
         public static string customVestigePath => InkboundModEnabler.settings.customVestigeRoot.Value;
         public static Dictionary<string, RarityType> stringToRarity = new() { { "none", RarityType.None }, { "common", RarityType.Common }, { "uncommon", RarityType.Uncommon },
                                                                               { "rare", RarityType.Rare }, { "epic", RarityType.Epic }, { "legendary", RarityType.Legendary } };
@@ -60,8 +61,7 @@ namespace InkboundModEnabler.Vestiges {
             }
         }
         public static void loadCustomVestiges() {
-            foreach (var file in Directory.GetFiles(customVestigePath, "*Vestige*.*", SearchOption.AllDirectories)) {
-                if (file.EndsWith("png") || file.EndsWith("jpg")) continue;
+            foreach (var file in filesToCheck) {
                 TemplateVestige template = null;
                 try {
                     template = JsonConvert.DeserializeObject<TemplateVestige>(new StreamReader(file).ReadToEnd(), new());

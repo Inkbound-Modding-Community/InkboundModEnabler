@@ -3,6 +3,7 @@ using ShinyShoe;
 using ShinyShoe.SharedDataLoader;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,10 +15,22 @@ namespace InkboundModEnabler.Vestiges {
         // Initialize the Vestige caches to allow lookup by name/guid
         [HarmonyPatch(typeof(AssetLibrary))]
         public static class AssetLibarary_Patch {
+            public static bool needsInitFiles = true;
             [HarmonyPatch(nameof(AssetLibrary.Initialize))]
             [HarmonyPrefix]
             public static void Initialize_Pre(AssetLibrary __instance) {
                 VestigeUtils.assetLibraryList.Add(__instance);
+                if (needsInitFiles && InkboundModEnabler.settings.checkForCustomVestiges.Value) {
+                    needsInitFiles = false;
+                    foreach (var file in Directory.GetFiles(TemplateVestigeCreator.customVestigePath, "*Vestige*.*", SearchOption.AllDirectories)) {
+                        if (file.EndsWith("png") || file.EndsWith("jpg")) continue;
+                        if (!InkboundModEnabler.needForceOffline) {
+                            InkboundModEnabler.needForceOffline = true;
+                            InkboundModEnabler.log.LogWarning("Set needForceOffline to true because possible Custom Vestiges were detected and checkForCustomVestiges is enabled.");
+                        };
+                        TemplateVestigeCreator.filesToCheck.Add(file);
+                    }
+                }
             }
             [HarmonyPatch(nameof(AssetLibrary.Initialize))]
             [HarmonyPriority(Priority.VeryHigh)]
@@ -97,9 +110,11 @@ namespace InkboundModEnabler.Vestiges {
             [HarmonyPatch(nameof(AddressablesImpl.InitializeAsync), new Type[] { typeof(string), typeof(string), typeof(bool) })]
             [HarmonyPostfix]
             public static void InitializeAsync(AddressablesImpl __instance) {
-                InkboundModEnabler.log.LogInfo("Initializing CustomIcon Infrastructure.");
-                __instance.ResourceManager.ResourceProviders.Add(new CustomIconProvider());
-                __instance.AddResourceLocator(CustomIconLocator.instance);
+                if (InkboundModEnabler.settings.checkForCustomVestiges.Value) {
+                    InkboundModEnabler.log.LogInfo("Initializing CustomIcon Infrastructure.");
+                    __instance.ResourceManager.ResourceProviders.Add(new CustomIconProvider());
+                    __instance.AddResourceLocator(CustomIconLocator.instance);
+                }
             }
         }
         // For testing purposes
@@ -108,10 +123,8 @@ namespace InkboundModEnabler.Vestiges {
             [HarmonyPatch(nameof(MainMenuScreenVisual.Initialize))]
             [HarmonyPostfix]
             public static void Initialize() {
-                try {
+                if (InkboundModEnabler.settings.checkForCustomVestiges.Value) {
                     TemplateVestigeCreator.loadCustomVestiges();
-                } catch (Exception ex) {
-                    InkboundModEnabler.log.LogError(ex.ToString());
                 }
             }
         }

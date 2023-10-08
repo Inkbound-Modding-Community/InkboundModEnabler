@@ -11,12 +11,15 @@ namespace InkboundModEnabler {
     public class Settings {
         public ConfigEntry<string> customVestigeRoot;
         public ConfigEntry<string> persistentPath;
+        public ConfigEntry<bool> checkForCustomVestiges;
         public ConfigEntry<bool> ForceOfflineMode;
         public ConfigEntry<bool> OverwriteSavedOfflineRun;
         public ConfigEntry<bool> ReportOnline;
         public Settings() {
-            customVestigeRoot = InkboundModEnabler.conf.Bind("Custom Content", "customVestigeRootDirectory", Path.Combine(Path.Combine(BepInEx.Paths.BepInExRootPath, "Custom"), "Vestiges"),
+            customVestigeRoot = InkboundModEnabler.conf.Bind("Custom Content", "customVestigeRootDirectory", Path.Combine(Path.Combine(BepInEx.Paths.BepInExRootPath, "custom"), "Vestiges"),
                 new ConfigDescription("This is where the mod will use as root to search for new Vestiges and as base path for their icons."));
+            checkForCustomVestiges = InkboundModEnabler.conf.Bind("Custom Content", "checkForCustomVestiges", true, new ConfigDescription("Disable this to ignore possible existing custom Vestiges" +
+                " in the customVestigeRootDirectors."));
             ForceOfflineMode = InkboundModEnabler.conf.Bind("Force Offline", "ForceOfflineMode", false, new ConfigDescription("Force the game to start in offline mode"));
             OverwriteSavedOfflineRun = InkboundModEnabler.conf.Bind("Force Offline", "OverwriteSavedOfflineRun", false, new ConfigDescription("Set to true to always copy the latest online data" +
                 " even if there is an in-progress offline run (which will then be deleted)."));

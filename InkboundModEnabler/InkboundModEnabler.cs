@@ -28,7 +28,7 @@ namespace InkboundModEnabler {
         public static InkboundModEnabler instance;
         public static Settings settings;
         public static ConfigFile conf;
-        internal static bool needForceOffline = true;
+        internal static bool needForceOffline = false;
         public static string logBuffer = "";
         public static Harmony HarmonyInstance => new Harmony(PLUGIN_GUID);
         private void Awake() {
