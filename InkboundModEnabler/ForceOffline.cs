@@ -16,7 +16,7 @@ namespace InkboundModEnabler {
     public class ForceOffline {
         public static ForceOffline instance;
         private static readonly List<string> excluded = new() { "BepInEx.BaseUnityPlugin", "UnityExplorer.ExplorerBepInPlugin" };
-        public static string persistentPath = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "persistent_data");
+        public static string persistentPath => InkboundModEnabler.settings.persistentPath.Value;
         internal static bool needForceOffline => InkboundModEnabler.settings.ForceOfflineMode.Value || InkboundModEnabler.needForceOffline;
         internal static bool shouldReportOnline => InkboundModEnabler.settings.ReportOnline.Value && !InkboundModEnabler.needForceOffline;
         public ForceOffline() {

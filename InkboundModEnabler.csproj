@@ -3,7 +3,7 @@
 		<TargetFramework>net472</TargetFramework>
 		<AssemblyName>InkboundModEnabler</AssemblyName>
 		<Description>BlupDuBlup</Description>
-		<Version>1.1.3</Version>
+		<Version>1.2.0</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
 		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
@@ -30,6 +30,14 @@
 			<HintPath>$(SolutionDir)lib\Assembly-CSharp_public.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="Unity.Addressables">
+			<HintPath>$(SolutionDir)lib\Unity.Addressables_public.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Unity.ResourceManager">
+			<HintPath>$(InkboundInstallDir)\Inkbound_Data\Managed\Unity.ResourceManager.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="Newtonsoft.Json">
 			<HintPath>$(InkboundInstallDir)\Inkbound_Data\Managed\Newtonsoft.Json.dll</HintPath>
 			<Private>False</Private>
@@ -45,6 +53,7 @@
 	<ItemGroup>
 		<PubliciseInputAssemblies Include="$(InkboundInstallDir)\Inkbound_Data\Managed\System.dll" />
 		<PubliciseInputAssemblies Include="$(InkboundInstallDir)\Inkbound_Data\Managed\Assembly-CSharp.dll" />
+		<PubliciseInputAssemblies Include="$(InkboundInstallDir)\Inkbound_Data\Managed\Unity.Addressables.dll" />
 	</ItemGroup>
 	<Target Name="Publicise" AfterTargets="BeforeBuild;Clean" Inputs="@(PubliciseInputAssemblies)" Outputs="$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.dll;$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.hash">
 		<MakeDir Directories="$(SolutionDir)lib/" />
