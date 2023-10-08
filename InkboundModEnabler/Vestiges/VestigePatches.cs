@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine.AddressableAssets;
 
 namespace InkboundModEnabler.Vestiges {
     public static class VestigePatches {
@@ -59,24 +60,60 @@ namespace InkboundModEnabler.Vestiges {
                             }
                         }
                     }
+                    if (pair.Key == typeof(ShinyShoe.Ares.SharedSOs.StatData)) {
+                        foreach (var item in pair.Value) {
+                            try {
+                                var statData = __instance.GetOrLoadAsset(item) as ShinyShoe.Ares.SharedSOs.StatData;
+                                VestigeUtils.instance.StatDataDisplayName_To_AssetID[statData.Guid] = item.assetID;
+                                VestigeUtils.instance.StatDataName_To_AssetID[statData.name] = item.assetID;
+                                if (!statData.Name.IsNullOrEmpty()) {
+                                    VestigeUtils.instance.StatDataDisplayName_To_AssetID[statData.Name] = item.assetID;
+                                }
+                            } catch (Exception e) {
+                                InkboundModEnabler.log.LogError(e.ToString());
+                            }
+                        }
+                    }
+                    if (pair.Key == typeof(ShinyShoe.Ares.SharedSOs.StatusEffectData)) {
+                        foreach (var item in pair.Value) {
+                            try {
+                                var statData = __instance.GetOrLoadAsset(item) as ShinyShoe.Ares.SharedSOs.StatusEffectData;
+                                VestigeUtils.instance.StatusEffectDataDisplayName_To_AssetID[statData.Guid] = item.assetID;
+                                VestigeUtils.instance.StatusEffectDataName_To_AssetID[statData.name] = item.assetID;
+                                if (!statData.Name.IsNullOrEmpty()) {
+                                    VestigeUtils.instance.StatusEffectDataDisplayName_To_AssetID[statData.Name] = item.assetID;
+                                }
+                            } catch (Exception e) {
+                                InkboundModEnabler.log.LogError(e.ToString());
+                            }
+                        }
+                    }
                 }
             }
         }
-        /* For testint purposes
+        // I'm unsure why exactly this method; the me from half an hour ago thought this was a good spot and who am I to doubt him?
+        [HarmonyPatch(typeof(AddressablesImpl))]
+        public static class AddressablesImpl_Patch {
+            [HarmonyPatch(nameof(AddressablesImpl.InitializeAsync), new Type[] { typeof(string), typeof(string), typeof(bool) })]
+            [HarmonyPostfix]
+            public static void InitializeAsync(AddressablesImpl __instance) {
+                InkboundModEnabler.log.LogInfo("Initializing CustomIcon Infrastructure.");
+                __instance.ResourceManager.ResourceProviders.Add(new CustomIconProvider());
+                __instance.AddResourceLocator(CustomIconLocator.instance);
+            }
+        }
+        // For testing purposes
         [HarmonyPatch(typeof(MainMenuScreenVisual))]
         public static class MainMenuScreenVisual_Patch {
             [HarmonyPatch(nameof(MainMenuScreenVisual.Initialize))]
             [HarmonyPostfix]
             public static void Initialize() {
                 try {
-                    var v = VestigeUtils.createBlankEquipmentData();
-                    v.RegisterNewEquipmentData();
-                    VestigeUtils.AddEquipToDefaultVestigeList(v, 1000);
+                    TemplateVestigeCreator.loadCustomVestiges();
                 } catch (Exception ex) {
                     InkboundModEnabler.log.LogError(ex.ToString());
                 }
             }
         }
-        */
     }
 }

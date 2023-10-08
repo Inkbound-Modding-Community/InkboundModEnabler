@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using InkboundModEnabler.Util;
+using InkboundModEnabler.Vestiges;
 using Mono.Btls;
 using Mono.Net.Security;
 using Mono.Unity;
@@ -22,12 +23,12 @@ namespace InkboundModEnabler {
     class InkboundModEnabler : BaseUnityPlugin {
         public const string PLUGIN_GUID = "ADDB.InkboundModEnabler";
         public const string PLUGIN_NAME = "Inkbound Mod Enabler";
-        public const string PLUGIN_VERSION = "1.1.3";
+        public const string PLUGIN_VERSION = "1.2.0";
         public static ManualLogSource log;
         public static InkboundModEnabler instance;
         public static Settings settings;
         public static ConfigFile conf;
-        internal static bool needForceOffline = false;
+        internal static bool needForceOffline = true;
         public static string logBuffer = "";
         public static Harmony HarmonyInstance => new Harmony(PLUGIN_GUID);
         private void Awake() {
@@ -39,6 +40,7 @@ namespace InkboundModEnabler {
                 }
                 conf = Config;
                 settings = new();
+                EnsureDirectories();
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
                 new ForceOffline();
             } catch (Exception e) {
@@ -46,6 +48,12 @@ namespace InkboundModEnabler {
             }
         }
         private void Update() {
+        }
+        private void EnsureDirectories() {
+            var persistent = new DirectoryInfo(settings.persistentPath.Value);
+            var vestiges = new DirectoryInfo(settings.customVestigeRoot.Value);
+            if (!persistent.Exists) persistent.Create();
+            if (!vestiges.Exists) vestiges.Create();
         }
         #region ModEnablerPatches
         // Make unstripped assemblies work
