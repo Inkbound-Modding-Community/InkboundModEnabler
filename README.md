@@ -55,22 +55,22 @@ Plugin GUID: ADDB.InkboundModEnabler
 
 [Custom Content]
 
-<b>customVestigeRootDirectory =</b> D:\Games\Steam\steamapps\common\Inkbound\BepInEx\Custom\Vestiges
+<b>customVestigeRootDirectory =</b> `D:\Games\Steam\steamapps\common\Inkbound\BepInEx\Custom\Vestiges`
 <br/>This is where the mod will use as root to search for new Vestiges and as base path for their icons.
 
-<b>checkForCustomVestiges =</b> true
+<b>checkForCustomVestiges =</b> `true`
 <br/>Disable this to ignore possible existing custom Vestiges in the customVestigeRootDirectors.
 
 [Force Offline]
 
-<b>ForceOfflineMode =</b> false
+<b>ForceOfflineMode =</b> `false`
 <br/>Force the game to start in offline mode
 
-<b>OverwriteSavedOfflineRun =</b> false
+<b>OverwriteSavedOfflineRun =</b> f`alse`
 <br/>Set to true to always copy the latest online data even if there is an in-progress offline run (which will then be deleted).
 
-<b>ReportOnline =</b> false
+<b>ReportOnline =</b> `false`
 <br/>When this is disabled, offline runs are kept separately in a way that they won't be reported after going back online. This is to prevent any kind of data/synchronization/verification problems. If you're playing with cheats/game changing mods this should be disabled!
 
-<b>persistentPath =</b> D:\Games\Steam\steamapps\common\Inkbound\BepInEx\plugins\InkboundModEnabler\persistent_data
+<b>persistentPath =</b> `D:\Games\Steam\steamapps\common\Inkbound\BepInEx\plugins\InkboundModEnabler\persistent_data`
 <br/>When this is disabled, offline runs are kept separately in a way that they won't be reported after going back online. This is to prevent any kind of data/synchronization/verification problems. If you're playing with cheats/game changing mods this should be disabled!
