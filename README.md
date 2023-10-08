@@ -66,7 +66,7 @@ Plugin GUID: ADDB.InkboundModEnabler
 <b>ForceOfflineMode =</b> `false`
 <br/>Force the game to start in offline mode
 
-<b>OverwriteSavedOfflineRun =</b> f`alse`
+<b>OverwriteSavedOfflineRun =</b> `false`
 <br/>Set to true to always copy the latest online data even if there is an in-progress offline run (which will then be deleted).
 
 <b>ReportOnline =</b> `false`
