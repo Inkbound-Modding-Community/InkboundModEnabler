@@ -117,7 +117,6 @@ namespace InkboundModEnabler.Vestiges {
                 }
             }
         }
-        // For testing purposes
         [HarmonyPatch(typeof(MainMenuScreenVisual))]
         public static class MainMenuScreenVisual_Patch {
             [HarmonyPatch(nameof(MainMenuScreenVisual.Initialize))]

@@ -23,7 +23,7 @@ namespace InkboundModEnabler {
     class InkboundModEnabler : BaseUnityPlugin {
         public const string PLUGIN_GUID = "ADDB.InkboundModEnabler";
         public const string PLUGIN_NAME = "Inkbound Mod Enabler";
-        public const string PLUGIN_VERSION = "1.2.0";
+        public const string PLUGIN_VERSION = "1.2.1";
         public static ManualLogSource log;
         public static InkboundModEnabler instance;
         public static Settings settings;
