@@ -94,8 +94,8 @@ namespace InkboundModEnabler.Vestiges {
                 InkboundModEnabler.log.LogWarning($"Custom Vestige {originForLog} is missing a Display Name!");
                 newVestige.equipmentName ??= template.InternalName;
             }
-            newVestige.m_Name = template.InternalName ?? template.DisplayName;
             if (existing == null) {
+                newVestige.m_Name = template.InternalName ?? template.DisplayName;
                 if (!template.GUID.IsNullOrWhiteSpace()) {
                     newVestige.guid = template.GUID;
                     newVestige.id = template.GUID;
