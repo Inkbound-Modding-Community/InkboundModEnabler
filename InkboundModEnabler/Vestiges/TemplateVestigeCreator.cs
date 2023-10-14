@@ -152,12 +152,12 @@ namespace InkboundModEnabler.Vestiges {
                     InkboundModEnabler.log.LogWarning($"Custom Vestige {originForLog} Weight is <= 0!");
                     newVestige.AddToLootList("AllVestigeList", 1);
                 }
-                InkboundModEnabler.log.LogInfo($"Enabled custom vestige {newVestige.Name}");
+                InkboundModEnabler.log.LogInfo($"Enabled custom vestige {newVestige.equipmentName}");
             } else {
                 if (template.Weight > 1) {
                     newVestige.ModifyInLootList("AllVestigeList", template.Weight);
                 }
-                InkboundModEnabler.log.LogInfo($"Modified base vestige {newVestige.Name} ({newVestige.name})");
+                InkboundModEnabler.log.LogInfo($"Modified base vestige {newVestige.equipmentName} ({newVestige.name})");
             }
         }
     }

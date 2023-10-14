@@ -69,13 +69,13 @@ namespace InkboundModEnabler {
         }
         public static void RegisterNewVestige(this ShinyShoe.Ares.SharedSOs.EquipmentData data) {
             Assert.IsTrue(data != null);
-            Assert.IsTrue(!data.Name.IsNullOrWhiteSpace());
+            Assert.IsTrue(!data.equipmentName.IsNullOrWhiteSpace());
             Assert.IsTrue(!data.Guid.IsNullOrWhiteSpace());
             if (instance.CustomVestigeGUIDs.Contains(data.guid)) {
-                InkboundModEnabler.log.LogError($"Encountered duplicate guid <{data.guid}> while registering Vestige {data.Name}; Providing new but you should fix!");
+                InkboundModEnabler.log.LogError($"Encountered duplicate guid <{data.guid}> while registering Vestige {data.equipmentName}; Providing new but you should fix!");
                 data.guid = ShinyShoe.GuidProvider.Runtime.CreateLongGuid();
             }
-            if (data.m_Name.IsNullOrWhiteSpace()) data.m_Name = data.Name;
+            if (data.m_Name.IsNullOrWhiteSpace()) data.m_Name = data.equipmentName;
             if (data.id.IsNullOrWhiteSpace()) data.id = data.guid;
             AssetLibraryManifest.Entry newEntry = new();
             newEntry.asset = data;
@@ -90,7 +90,7 @@ namespace InkboundModEnabler {
             var key = Assembly.GetCallingAssembly().FullName;
             _instance.EquipmentDataGUID_To_AssetID[data.Guid] = assetID;
             _instance.EquipmentDataName_To_AssetID[data.name] = assetID;
-            _instance.EquipmentDisplayName_To_AssetID[data.Name] = assetID;
+            _instance.EquipmentDisplayName_To_AssetID[data.equipmentName] = assetID;
             if (!instance.CustomVestigesByAssembly.TryGetValue(key, out var lst)) {
                 lst = new();
             }

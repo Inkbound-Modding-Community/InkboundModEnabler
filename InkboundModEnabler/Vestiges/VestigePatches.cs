@@ -43,8 +43,8 @@ namespace InkboundModEnabler.Vestiges {
                                 var equip = __instance.GetOrLoadAsset(item) as ShinyShoe.Ares.SharedSOs.EquipmentData;
                                 VestigeUtils.instance.EquipmentDataGUID_To_AssetID[equip.Guid] = item.assetID;
                                 VestigeUtils.instance.EquipmentDataName_To_AssetID[equip.name] = item.assetID;
-                                if (!equip.Name.IsNullOrEmpty()) {
-                                    VestigeUtils.instance.EquipmentDisplayName_To_AssetID[equip.Name] = item.assetID;
+                                if (!equip.equipmentName.IsNullOrEmpty()) {
+                                    VestigeUtils.instance.EquipmentDisplayName_To_AssetID[equip.equipmentName] = item.assetID;
                                 }
                             } catch (Exception e) {
                                 InkboundModEnabler.log.LogError(e.ToString());
@@ -79,8 +79,8 @@ namespace InkboundModEnabler.Vestiges {
                                 var statData = __instance.GetOrLoadAsset(item) as ShinyShoe.Ares.SharedSOs.StatData;
                                 VestigeUtils.instance.StatDataDisplayName_To_AssetID[statData.Guid] = item.assetID;
                                 VestigeUtils.instance.StatDataName_To_AssetID[statData.name] = item.assetID;
-                                if (!statData.Name.IsNullOrEmpty()) {
-                                    VestigeUtils.instance.StatDataDisplayName_To_AssetID[statData.Name] = item.assetID;
+                                if (!statData.statName.IsNullOrEmpty()) {
+                                    VestigeUtils.instance.StatDataDisplayName_To_AssetID[statData.statName] = item.assetID;
                                 }
                             } catch (Exception e) {
                                 InkboundModEnabler.log.LogError(e.ToString());
@@ -93,8 +93,8 @@ namespace InkboundModEnabler.Vestiges {
                                 var statData = __instance.GetOrLoadAsset(item) as ShinyShoe.Ares.SharedSOs.StatusEffectData;
                                 VestigeUtils.instance.StatusEffectDataDisplayName_To_AssetID[statData.Guid] = item.assetID;
                                 VestigeUtils.instance.StatusEffectDataName_To_AssetID[statData.name] = item.assetID;
-                                if (!statData.Name.IsNullOrEmpty()) {
-                                    VestigeUtils.instance.StatusEffectDataDisplayName_To_AssetID[statData.Name] = item.assetID;
+                                if (!statData.helperData.NameKey.IsNullOrEmpty()) {
+                                    VestigeUtils.instance.StatusEffectDataDisplayName_To_AssetID[statData.helperData.NameKey] = item.assetID;
                                 }
                             } catch (Exception e) {
                                 InkboundModEnabler.log.LogError(e.ToString());

@@ -9,7 +9,7 @@
 		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	</PropertyGroup>
 	<PropertyGroup>
-		<InkboundInstallDir Condition=" '$(InkboundInstallDir)' == '' ">D:\Games\Steam\steamapps\common\Inkbound</InkboundInstallDir>
+		<InkboundInstallDir Condition=" '$(InkboundInstallDir)' == '' ">C:\Program Files (x86)\Steam\steamapps\common\Inkbound</InkboundInstallDir>
 	</PropertyGroup>
 	<PropertyGroup>
 		<PostBuildEvent>
