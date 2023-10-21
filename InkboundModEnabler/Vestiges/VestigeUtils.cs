@@ -53,7 +53,7 @@ namespace InkboundModEnabler {
             ticket.lootData = ld;
             (getLootListDataByName(LootListName) ?? getLootListDataByGUID(LootListName))?.lootTickets?.Add(ticket);
         }
-        internal static void RegisterNewManifestEntry(this AssetLibraryManifest.Entry newEntry) {
+        public static void RegisterNewManifestEntry(this AssetLibraryManifest.Entry newEntry) {
             foreach (var assetLib in assetLibraryList) {
                 assetLib._manifest.entries.Add(newEntry);
                 assetLib._nameToEntry[newEntry.name] = newEntry;
