@@ -273,9 +273,6 @@ namespace InkboundModEnabler {
             }
             return null;
         }
-        public static void ensureEquipDrops(ShinyShoe.Ares.SharedSOs.EquipmentData eq) {
-            // TODO for testing
-        }
         #endregion
         #region internal
         [Serializable]
