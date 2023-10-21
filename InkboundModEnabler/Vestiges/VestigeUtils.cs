@@ -74,6 +74,8 @@ namespace InkboundModEnabler {
             if (instance.CustomVestigeGUIDs.Contains(data.guid)) {
                 InkboundModEnabler.log.LogError($"Encountered duplicate guid <{data.guid}> while registering Vestige {data.Name}; Providing new but you should fix!");
                 data.guid = ShinyShoe.GuidProvider.Runtime.CreateLongGuid();
+            } else {
+                instance.CustomVestigeGUIDs.Add(data.guid);
             }
             if (data.m_Name.IsNullOrWhiteSpace()) data.m_Name = data.Name;
             if (data.id.IsNullOrWhiteSpace()) data.id = data.guid;
