@@ -9,6 +9,7 @@ using ShinyShoe.SharedDataLoader;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -30,7 +31,8 @@ namespace InkboundModEnabler {
             eq.description = "Test Description";
             eq.equipmentType = ShinyShoe.Ares.EquipmentType.Accessory;
             eq.fileID = 0;
-            eq.guid = "CB90F870D9FC4F9697F6E18AEF2B7D79";
+            eq.guid = "CB90F870D9FC4F9697F5E18AEF2B7D79";
+            eq.id = "CB90F870D9FC4F9697F5E18AEF2B7D79";
             eq.assetAddressLoot = new("2ec049f1ea67928478a73af299b7ee1a");
             return eq;
         }
@@ -39,13 +41,17 @@ namespace InkboundModEnabler {
             eq.assetAddressIcon.m_AssetGUID = guid;
             CustomIconLocator.instance.assetGUIDToSmallIconPath[guid] = path;
         }
+        public static void ModifyInLootList(this ShinyShoe.Ares.SharedSOs.EquipmentData eq, string LootListName, int weight) {
+            var ticket = (getLootListDataByName(LootListName) ?? getLootListDataByGUID(LootListName))?.lootTickets?.First(ticket => ticket.lootData.equipmentData == eq);
+            if (ticket != null) ticket.tickets = weight;
+        }
         public static void AddToLootList(this ShinyShoe.Ares.SharedSOs.EquipmentData eq, string LootListName, int weight) {
             ShinyShoe.Ares.SharedSOs.LootTicketData ticket = new();
             ticket.tickets = weight;
             ShinyShoe.Ares.SharedSOs.LootData ld = new();
             ld.equipmentData = eq;
             ticket.lootData = ld;
-            getLootListDataByName(LootListName).lootTickets.Add(ticket);
+            (getLootListDataByName(LootListName) ?? getLootListDataByGUID(LootListName))?.lootTickets?.Add(ticket);
         }
         internal static void RegisterNewManifestEntry(this AssetLibraryManifest.Entry newEntry) {
             foreach (var assetLib in assetLibraryList) {
@@ -70,6 +76,7 @@ namespace InkboundModEnabler {
                 data.guid = ShinyShoe.GuidProvider.Runtime.CreateLongGuid();
             }
             if (data.m_Name.IsNullOrWhiteSpace()) data.m_Name = data.Name;
+            if (data.id.IsNullOrWhiteSpace()) data.id = data.guid;
             AssetLibraryManifest.Entry newEntry = new();
             newEntry.asset = data;
             newEntry.dataId = data.Guid;
