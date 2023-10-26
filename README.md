@@ -28,9 +28,12 @@ Inkbound/
 └── Inkbound_BurstDebugInformation_DoNotShip/
 
 ### Changelog:
+## Version 1.2.3 (Early Access Patch 0.3.0)
+- ***(Bubbles)*** Compatability with game version 0.3.0.
+
 ## Version 1.2.2 (Early Access Patch 0.2.9)
 - Changed ForceOffline to make options clearer.
-- Code Cleanup (Moved to new .csproj template; Removed some VestigeUtils dumping code that wasn't used anymore)
+- Code Cleanup (Moved to new .csproj template; Removed some VestigeUtils dumping code that wasn't used anymore).
 
 ## Version 1.2.1 (Early Access Patch 0.2.9)
 - Custom items are now saved when runs are stopped and continued later.
@@ -38,23 +41,23 @@ Inkbound/
 
 ## Version 1.2 (Early Access Patch 0.2.9)
 - Finished implementation of VestigeUtils.
-- Added the possibility to add new Vestiges by just adding a textfile and an image; no need for doing all the work that comes with creating a mod project!
+- Added the possibility to add new Vestiges by just adding a textfile and an image; no need for doing all the work that comes with creating a mod project.
 
 ## Version 1.1.3 (Early Access Patch 0.2.9)
-- Added opt-out Force Offline; meaning if any unknown mod without the [CosmeticPlugin] Attribute is encountered the game will automatically enter Forced Offline mode
+- Added opt-out Force Offline; meaning if any unknown mod without the [CosmeticPlugin] Attribute is encountered the game will automatically enter Forced Offline mode.
 
 ## Version 1.1.2 (Early Access Patch 0.2.9)
-- Integrate force offline functionality
+- Integrate force offline functionality.
 
 ## Version 1.1.1 (Early Access Patch 0.2.9)
-- Added basic VestigeUtils
-- Change project layout
+- Added basic VestigeUtils.
+- Change project layout.
 
 ## Version 1.1 (Early Access Patch 0.2.9)
-- Disabled Crash Reports and Analytics
+- Disabled Crash Reports and Analytics.
 
 ## Version 1.0 (Early Access Patch 0.2.8)
-- Initial Release
+- Initial Release.
 
 ### Config
 \#\# Plugin GUID: InkboundModEnabler
