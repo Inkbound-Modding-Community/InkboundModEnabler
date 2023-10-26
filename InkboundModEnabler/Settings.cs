@@ -28,7 +28,7 @@ namespace InkboundModEnabler {
                 new ConfigDescription("Keep offline saves separate from normal. This allows having offline and online mode to keep track of different progression. This is forced behaviour when using non-cosmetic mods." +
                 " Best used with OverwriteOfflineSave set to false"));
             OverwriteOfflineSave = InkboundModEnabler.conf.Bind("Force Offline", "OverwriteOfflineSave", true,
-                new ConfigDescription("This prevents the mod from overwriting the offline save with the online saves."));
+                new ConfigDescription("If UseSeparateOfflineSave is enabled, setting this to false prevents the mod from overwriting the offline save with online saves, basically treating offline and online as two separate profiles."));
             OverwriteSavedOfflineRun = InkboundModEnabler.conf.Bind("Force Offline", "OverwriteSavedOfflineRun", false, new ConfigDescription("Ignored if OverwriteOfflineSave is false." +
                 " If this is enabled then offline saves will be overwritten even if there is a paused run in the offline save."));
         }
