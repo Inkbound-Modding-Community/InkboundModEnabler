@@ -28,6 +28,10 @@ Inkbound/
 └── Inkbound_BurstDebugInformation_DoNotShip/
 
 ### Changelog:
+## Version 1.2.2 (Early Access Patch 0.2.9)
+- Changed ForceOffline to make options clearer.
+- Code Cleanup (Moved to new .csproj template; Removed some VestigeUtils dumping code that wasn't used anymore)
+
 ## Version 1.2.1 (Early Access Patch 0.2.9)
 - Custom items are now saved when runs are stopped and continued later.
 - It is now possible to overwrite existing Vestiges with Vestige Template (The internal name or the guid has to match that of the existing Vestige.

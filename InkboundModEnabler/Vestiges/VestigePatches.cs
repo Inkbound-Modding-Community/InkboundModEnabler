@@ -24,8 +24,8 @@ namespace InkboundModEnabler.Vestiges {
                     needsInitFiles = false;
                     foreach (var file in Directory.GetFiles(TemplateVestigeCreator.customVestigePath, "*Vestige*.*", SearchOption.AllDirectories)) {
                         if (file.EndsWith("png") || file.EndsWith("jpg")) continue;
-                        if (!InkboundModEnabler.needForceOffline) {
-                            InkboundModEnabler.needForceOffline = true;
+                        if (!ForceOffline.saveIsDirty) {
+                            ForceOffline.saveIsDirty = true;
                             InkboundModEnabler.log.LogWarning("Set needForceOffline to true because possible Custom Vestiges were detected and checkForCustomVestiges is enabled.");
                         };
                         TemplateVestigeCreator.filesToCheck.Add(file);
@@ -120,6 +120,7 @@ namespace InkboundModEnabler.Vestiges {
         [HarmonyPatch(typeof(MainMenuScreenVisual))]
         public static class MainMenuScreenVisual_Patch {
             [HarmonyPatch(nameof(MainMenuScreenVisual.Initialize))]
+            [HarmonyPriority(Priority.VeryLow)]
             [HarmonyPostfix]
             public static void Initialize() {
                 if (InkboundModEnabler.settings.checkForCustomVestiges.Value) {

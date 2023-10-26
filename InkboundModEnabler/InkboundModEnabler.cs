@@ -23,26 +23,21 @@ namespace InkboundModEnabler {
     class InkboundModEnabler : BaseUnityPlugin {
         public const string PLUGIN_GUID = "ADDB.InkboundModEnabler";
         public const string PLUGIN_NAME = "Inkbound Mod Enabler";
-        public const string PLUGIN_VERSION = "1.2.1";
+        public const string PLUGIN_VERSION = "1.2.2";
         public static ManualLogSource log;
         public static InkboundModEnabler instance;
         public static Settings settings;
         public static ConfigFile conf;
-        internal static bool needForceOffline = false;
-        public static string logBuffer = "";
         public static Harmony HarmonyInstance => new Harmony(PLUGIN_GUID);
         private void Awake() {
             try {
                 instance = this;
                 log = Logger;
-                if (!logBuffer.IsNullOrWhiteSpace()) {
-                    log.LogError(logBuffer);
-                }
                 conf = Config;
                 settings = new();
                 EnsureDirectories();
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
-                new ForceOffline();
+                ForceOffline.Init();
             } catch (Exception e) {
                 log.LogError(e);
             }
