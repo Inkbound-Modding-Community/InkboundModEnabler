@@ -13,21 +13,24 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace InkboundModEnabler {
-    public class ForceOffline {
-        public static ForceOffline instance;
+    public static class ForceOffline {
+        private static bool initialized = false;
         private static readonly List<string> excluded = new() { "BepInEx.BaseUnityPlugin", "UnityExplorer.ExplorerBepInPlugin" };
         public static string persistentPath => InkboundModEnabler.settings.persistentPath.Value;
-        internal static bool needForceOffline => InkboundModEnabler.settings.ForceOfflineMode.Value || InkboundModEnabler.needForceOffline;
-        internal static bool shouldReportOnline => InkboundModEnabler.settings.ReportOnline.Value && !InkboundModEnabler.needForceOffline;
-        public ForceOffline() {
-            instance = this;
-            bool replaceExistingRun = !AnyUnfinishedOfflineRun() || InkboundModEnabler.settings.OverwriteSavedOfflineRun.Value;
-            if (replaceExistingRun && !shouldReportOnline) {
-                Util.UtilityFunctions.CopyDirectory(Application.persistentDataPath + @"\latest-player-save", persistentPath + @"\latest-player-save", true);
-                Util.UtilityFunctions.CopyDirectory(Application.persistentDataPath + @"\save-game", persistentPath + @"\save-game", true);
+        internal static bool needForceOffline => InkboundModEnabler.settings.ForceOfflineMode.Value || saveIsDirty;
+        internal static bool keepSaveSeparate => InkboundModEnabler.settings.UseSeparateOfflineSave.Value || saveIsDirty;
+        internal static bool overwriteSave => keepSaveSeparate && InkboundModEnabler.settings.OverwriteOfflineSave.Value && (!AnyUnfinishedOfflineRun() || InkboundModEnabler.settings.OverwriteSavedOfflineRun.Value);
+        internal static bool saveIsDirty = false;
+        public static void Init() {
+            if (!initialized) {
+                initialized = true;
+                if (overwriteSave) {
+                    UtilityFunctions.CopyDirectory(Application.persistentDataPath + @"\latest-player-save", persistentPath + @"\latest-player-save", true);
+                    UtilityFunctions.CopyDirectory(Application.persistentDataPath + @"\save-game", persistentPath + @"\save-game", true);
+                }
             }
         }
-        public bool AnyUnfinishedOfflineRun() {
+        public static bool AnyUnfinishedOfflineRun() {
             if (!Directory.Exists(persistentPath)) {
                 Directory.CreateDirectory(persistentPath);
             }
@@ -80,7 +83,7 @@ namespace InkboundModEnabler {
                                     InkboundModEnabler.log.LogInfo($"Encountered plugin excluded from check {t.FullName}");
                                 } else {
                                     InkboundModEnabler.log.LogWarning($"Encountered non-cosmetic plugin {t.FullName}; Forcing offline mode!");
-                                    InkboundModEnabler.needForceOffline = true;
+                                    saveIsDirty = true;
                                 }
                             }
                         }
@@ -90,7 +93,7 @@ namespace InkboundModEnabler {
             [HarmonyPatch(nameof(OfflineModeSystem.GetFullSaveDir))]
             [HarmonyPrefix]
             public static bool GetFullSaveDir(ref string __result) {
-                if (needForceOffline && !shouldReportOnline) {
+                if (keepSaveSeparate) {
                     __result = Path.GetFullPath(Path.Combine(persistentPath, "latest-player-save"));
                     return false;
                 }
@@ -102,7 +105,7 @@ namespace InkboundModEnabler {
             [HarmonyPatch(nameof(SaveGameSystem.GetFullSaveGameTopDir))]
             [HarmonyPrefix]
             public static bool GetFullSaveGameTopDir(ref string __result) {
-                if (needForceOffline && !shouldReportOnline) {
+                if (keepSaveSeparate) {
                     __result = Path.GetFullPath(Path.Combine(persistentPath, "save-game"));
                     return false;
                 }
