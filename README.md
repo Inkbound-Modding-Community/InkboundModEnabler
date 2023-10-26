@@ -57,7 +57,7 @@ Inkbound/
 - Initial Release
 
 ### Config
-\#\# Plugin GUID: ADDB.InkboundModEnabler
+\#\# Plugin GUID: InkboundModEnabler
 
 [Custom Content]
 
