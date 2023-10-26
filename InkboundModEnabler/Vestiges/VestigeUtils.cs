@@ -19,7 +19,7 @@ namespace InkboundModEnabler {
         private static VestigeDataContainer _instance;
         public static VestigeDataContainer instance {
             get {
-                _instance ??= VestigeDataContainer.VestigeUtilsDumper.loadDump();
+                _instance ??= new();
                 return _instance;
             }
         }
@@ -284,81 +284,22 @@ namespace InkboundModEnabler {
         }
         #endregion
         #region internal
-        [Serializable]
         public sealed class VestigeDataContainer {
-            [JsonProperty("LootTableName_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> LootTableName_To_AssetID = new();
-            [JsonProperty("LootTableGUID_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> LootTableGUID_To_AssetID = new();
-            [JsonProperty("LootListName_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> LootListName_To_AssetID = new();
-            [JsonProperty("LootListGUID_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> LootListGUID_To_AssetID = new();
-            [JsonProperty("EquipmentDataName_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> EquipmentDataName_To_AssetID = new();
-            [JsonProperty("EquipmentDisplayName_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> EquipmentDisplayName_To_AssetID = new();
-            [JsonProperty("EquipmentDataGUID_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> EquipmentDataGUID_To_AssetID = new();
-            [JsonProperty("StatDataName_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> StatDataName_To_AssetID = new();
-            [JsonProperty("StatDataDisplayName_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> StatDataDisplayName_To_AssetID = new();
-            [JsonProperty("StatDataGUID_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> StatDataGUID_To_AssetID = new();
-            [JsonProperty("StatusEffectDataName_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> StatusEffectDataName_To_AssetID = new();
-            [JsonProperty("StatusEffectDataDisplayName_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> StatusEffectDataDisplayName_To_AssetID = new();
-            [JsonProperty("StatusEffectDataGUID_To_AssetID")]
-            public Util.SerializableDictionary<string, AssetID> StatusEffectDataGUID_To_AssetID = new();
-            public Util.SerializableDictionary<string, List<string>> CustomVestigesByAssembly = new();
+            public Dictionary<string, AssetID> LootTableName_To_AssetID = new();
+            public Dictionary<string, AssetID> LootTableGUID_To_AssetID = new();
+            public Dictionary<string, AssetID> LootListName_To_AssetID = new();
+            public Dictionary<string, AssetID> LootListGUID_To_AssetID = new();
+            public Dictionary<string, AssetID> EquipmentDataName_To_AssetID = new();
+            public Dictionary<string, AssetID> EquipmentDisplayName_To_AssetID = new();
+            public Dictionary<string, AssetID> EquipmentDataGUID_To_AssetID = new();
+            public Dictionary<string, AssetID> StatDataName_To_AssetID = new();
+            public Dictionary<string, AssetID> StatDataDisplayName_To_AssetID = new();
+            public Dictionary<string, AssetID> StatDataGUID_To_AssetID = new();
+            public Dictionary<string, AssetID> StatusEffectDataName_To_AssetID = new();
+            public Dictionary<string, AssetID> StatusEffectDataDisplayName_To_AssetID = new();
+            public Dictionary<string, AssetID> StatusEffectDataGUID_To_AssetID = new();
+            public Dictionary<string, List<string>> CustomVestigesByAssembly = new();
             public HashSet<string> CustomVestigeGUIDs = new();
-
-            public static class VestigeUtilsDumper {
-                internal static bool shouldDump = false;
-                public static void dump() {
-                    var dirPath = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName;
-                    var filePath = Path.Combine(dirPath, "VestigeUtils.json");
-                    try {
-                        using (StreamWriter writter = new StreamWriter(filePath)) {
-                            writter.WriteLine(JsonConvert.SerializeObject(instance, typeof(VestigeUtils), Formatting.Indented, new()));
-                        }
-                    } catch (Exception ex) {
-                        if (InkboundModEnabler.log != null) {
-                            InkboundModEnabler.log.LogError(ex.ToString());
-                        } else {
-                            InkboundModEnabler.logBuffer += ex.ToString() + "\n";
-                        }
-                    }
-                }
-                internal static VestigeDataContainer loadDump() {
-                    /*
-                    var dirPath = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName;
-                    var filePath = Path.Combine(dirPath, "VestigeUtils.json");
-                    VestigeDataContainer ret = null;
-                    if (!File.Exists(filePath)) {
-                        shouldDump = true;
-                    } else {
-                        try {
-                            using (StreamReader reader = new StreamReader(filePath)) {
-                                ret = JsonConvert.DeserializeObject<VestigeDataContainer>(reader.ReadToEnd(), new());
-                            }
-                        } catch (Exception ex) {
-                            if (InkboundModEnabler.log != null) {
-                                InkboundModEnabler.log.LogError("Critical Error: Failed to load Vestige dump!");
-                                InkboundModEnabler.log.LogError(ex.ToString());
-                            } else {
-                                InkboundModEnabler.logBuffer += "Critical Error: Failed to load Vestige dump!\n";
-                                InkboundModEnabler.logBuffer += ex.ToString() + "\n";
-                            }
-                        }
-                    }
-                    return ret ?? new();
-                    */
-                    return new();
-                }
-            }
         }
     }
     #endregion
