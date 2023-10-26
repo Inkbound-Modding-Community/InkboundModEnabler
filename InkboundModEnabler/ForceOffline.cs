@@ -19,12 +19,12 @@ namespace InkboundModEnabler {
         public static string persistentPath => InkboundModEnabler.settings.persistentPath.Value;
         internal static bool needForceOffline => InkboundModEnabler.settings.ForceOfflineMode.Value || saveIsDirty;
         internal static bool keepSaveSeparate => InkboundModEnabler.settings.UseSeparateOfflineSave.Value || saveIsDirty;
-        internal static bool replaceExistingRun => keepSaveSeparate && (!AnyUnfinishedOfflineRun() || InkboundModEnabler.settings.OverwriteSavedOfflineRun.Value);
+        internal static bool overwriteSave => keepSaveSeparate && InkboundModEnabler.settings.OverwriteOfflineSave.Value && (!AnyUnfinishedOfflineRun() || InkboundModEnabler.settings.OverwriteSavedOfflineRun.Value);
         internal static bool saveIsDirty = false;
         public static void Init() {
             if (!initialized) {
                 initialized = true;
-                if (replaceExistingRun) {
+                if (overwriteSave) {
                     UtilityFunctions.CopyDirectory(Application.persistentDataPath + @"\latest-player-save", persistentPath + @"\latest-player-save", true);
                     UtilityFunctions.CopyDirectory(Application.persistentDataPath + @"\save-game", persistentPath + @"\save-game", true);
                 }
