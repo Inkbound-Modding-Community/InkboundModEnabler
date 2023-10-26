@@ -21,7 +21,7 @@ namespace InkboundModEnabler {
     [BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
     [CosmeticPlugin]
     class InkboundModEnabler : BaseUnityPlugin {
-        public const string PLUGIN_GUID = "ADDB.InkboundModEnabler";
+        public const string PLUGIN_GUID = "InkboundModEnabler";
         public const string PLUGIN_NAME = "Inkbound Mod Enabler";
         public const string PLUGIN_VERSION = "1.2.2";
         public static ManualLogSource log;
