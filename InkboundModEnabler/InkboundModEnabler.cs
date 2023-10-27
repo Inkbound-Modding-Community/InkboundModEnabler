@@ -3,7 +3,6 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using InkboundModEnabler.Util;
-using InkboundModEnabler.Vestiges;
 using Mono.Btls;
 using Mono.Net.Security;
 using Mono.Unity;

@@ -29,7 +29,7 @@ Inkbound/
 
 ### Changelog:
 ## Version 1.2.3 (Early Access Patch 0.3.0)
-- ***(Bubbles)*** Compatability with game version 0.3.0.
+- (***Bubbles***): Compatability with game version 0.3.0.
 
 ## Version 1.2.2 (Early Access Patch 0.2.9)
 - Changed ForceOffline to make options clearer.
