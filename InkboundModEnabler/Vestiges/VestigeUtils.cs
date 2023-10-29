@@ -26,7 +26,7 @@ namespace InkboundModEnabler {
         public static void AddSmallSprite(this ShinyShoe.Ares.SharedSOs.EquipmentData eq, string guid, string path) {
             eq.assetAddressIcon = new ShinyShoe.SharedDataLoader.UnityEngine.AssetReferenceSprite();
             eq.assetAddressIcon.m_AssetGUID = guid;
-            CustomAssetLocator.instance.assetGUIDToPath[guid] = path;
+            ClientDBUtils.RegisterAsset(guid, path);
         }
         public static void ModifyInLootList(this ShinyShoe.Ares.SharedSOs.EquipmentData eq, string LootListName, int weight) {
             var ticket = (getLootListDataByName(LootListName) ?? getLootListDataByGUID(LootListName))?.lootTickets?.First(ticket => ticket.lootData.equipmentData == eq);

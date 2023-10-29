@@ -9,6 +9,12 @@ using UnityEngine.AddressableAssets;
 
 namespace InkboundModEnabler {
     public static class ClientDBUtils {
+        public static void RegisterAsset(string GUID, string path) {
+            RegisterAsset(GUID, path, "InkboundModEnablerCustomSpriteProvider");
+        }
+        public static void RegisterAsset(string GUID, string path, string ProviderName) {
+            CustomAssetLocator.instance.assetGUIDToPath[GUID] = path;
+        }
         [HarmonyPatch(typeof(AddressablesImpl))]
         public static class AddressablesImpl_Patch {
             [HarmonyPatch(nameof(AddressablesImpl.InitializeAsync), new Type[] { typeof(string), typeof(string), typeof(bool) })]
