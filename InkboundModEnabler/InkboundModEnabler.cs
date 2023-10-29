@@ -29,7 +29,7 @@ namespace InkboundModEnabler {
         public static Settings settings;
         public static ConfigFile conf;
         public static WorldServer worldServer;
-        public static Harmony HarmonyInstance => new Harmony(PLUGIN_GUID);
+        public static readonly Harmony HarmonyInstance = new Harmony(PLUGIN_GUID);
         private void Awake() {
             try {
                 instance = this;
