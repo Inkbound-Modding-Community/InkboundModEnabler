@@ -9,9 +9,9 @@ using UnityEngine;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace InkboundModEnabler.Vestiges {
-    internal class CustomIconProvider : ResourceProviderBase {
+    internal class CustomSpriteProvider : ResourceProviderBase {
         public static string baseSpritePath => InkboundModEnabler.settings.customVestigeRoot.Value;
-        public CustomIconProvider() {
+        public CustomSpriteProvider() {
             m_ProviderId = "InkboundModEnablerCustomSpriteProvider";
         }
         public override void Provide(ProvideHandle provideHandle) {

@@ -1,29 +1,16 @@
 ﻿using BepInEx;
-using HarmonyLib;
 using InkboundModEnabler.Vestiges;
-using Newtonsoft.Json;
-using ShinyShoe;
-using ShinyShoe.Ares;
-using ShinyShoe.Ares.SharedSOs;
 using ShinyShoe.SharedDataLoader;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace InkboundModEnabler {
     public static class VestigeUtils {
-        private static VestigeDataContainer _instance;
-        public static VestigeDataContainer instance {
-            get {
-                _instance ??= new();
-                return _instance;
-            }
-        }
-        public static List<AssetLibrary> assetLibraryList = new();
+        public static readonly VestigeDataContainer instance = new();
         public static ShinyShoe.Ares.SharedSOs.EquipmentData createBlankEquipmentData() {
             ShinyShoe.Ares.SharedSOs.EquipmentData eq = new();
             eq.rarity = ShinyShoe.Ares.RarityType.Common;
@@ -39,7 +26,7 @@ namespace InkboundModEnabler {
         public static void AddSmallSprite(this ShinyShoe.Ares.SharedSOs.EquipmentData eq, string guid, string path) {
             eq.assetAddressIcon = new ShinyShoe.SharedDataLoader.UnityEngine.AssetReferenceSprite();
             eq.assetAddressIcon.m_AssetGUID = guid;
-            CustomIconLocator.instance.assetGUIDToSmallIconPath[guid] = path;
+            CustomAssetLocator.instance.assetGUIDToPath[guid] = path;
         }
         public static void ModifyInLootList(this ShinyShoe.Ares.SharedSOs.EquipmentData eq, string LootListName, int weight) {
             var ticket = (getLootListDataByName(LootListName) ?? getLootListDataByGUID(LootListName))?.lootTickets?.First(ticket => ticket.lootData.equipmentData == eq);
@@ -52,20 +39,6 @@ namespace InkboundModEnabler {
             ld.equipmentData = eq;
             ticket.lootData = ld;
             (getLootListDataByName(LootListName) ?? getLootListDataByGUID(LootListName))?.lootTickets?.Add(ticket);
-        }
-        public static void RegisterNewManifestEntry(this AssetLibraryManifest.Entry newEntry) {
-            foreach (var assetLib in assetLibraryList) {
-                assetLib._manifest.entries.Add(newEntry);
-                assetLib._nameToEntry[newEntry.name] = newEntry;
-                assetLib._assetIDToEntry[newEntry.assetID] = newEntry;
-                assetLib._dataIdToEntry[newEntry.dataId] = newEntry;
-                List<AssetLibraryManifest.Entry> list;
-                if (!assetLib._baseDataTypeToEntries.TryGetValue(newEntry.classType, out list)) {
-                    list = new List<AssetLibraryManifest.Entry>();
-                    assetLib._baseDataTypeToEntries.Add(newEntry.classType, list);
-                }
-                list.Add(newEntry);
-            }
         }
         public static void RegisterNewVestige(this ShinyShoe.Ares.SharedSOs.EquipmentData data) {
             Assert.IsTrue(data != null);
@@ -88,11 +61,11 @@ namespace InkboundModEnabler {
             newEntry.className = "ShinyShoe.Ares.SharedSOs.EquipmentData";
             newEntry.assetID = assetID;
             newEntry.name = data.m_Name;
-            newEntry.RegisterNewManifestEntry();
+            newEntry.RegisterManifestEntry();
             var key = Assembly.GetCallingAssembly().FullName;
-            _instance.EquipmentDataGUID_To_AssetID[data.Guid] = assetID;
-            _instance.EquipmentDataName_To_AssetID[data.name] = assetID;
-            _instance.EquipmentDisplayName_To_AssetID[data.equipmentName] = assetID;
+            instance.EquipmentDataGUID_To_AssetID[data.Guid] = assetID;
+            instance.EquipmentDataName_To_AssetID[data.name] = assetID;
+            instance.EquipmentDisplayName_To_AssetID[data.equipmentName] = assetID;
             if (!instance.CustomVestigesByAssembly.TryGetValue(key, out var lst)) {
                 lst = new();
             }
@@ -102,7 +75,7 @@ namespace InkboundModEnabler {
         #region getter
         public static ShinyShoe.Ares.SharedSOs.LootTableData getLootTableDataByName(string InternalName) {
             if (instance.LootTableName_To_AssetID.TryGetValue(InternalName, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -116,7 +89,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.LootTableData getLootTableDataByGUID(string GUID) {
             if (instance.LootTableGUID_To_AssetID.TryGetValue(GUID, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -130,7 +103,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.LootListData getLootListDataByName(string InternalName) {
             if (instance.LootListName_To_AssetID.TryGetValue(InternalName, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -144,7 +117,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.LootListData getLootListDataByGUID(string GUID) {
             if (instance.LootListGUID_To_AssetID.TryGetValue(GUID, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -158,7 +131,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.EquipmentData getEquipmentDataByDisplayName(string DisplayName) {
             if (instance.EquipmentDisplayName_To_AssetID.TryGetValue(DisplayName, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -172,7 +145,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.EquipmentData getEquipmentDataByName(string InternalName) {
             if (instance.EquipmentDataName_To_AssetID.TryGetValue(InternalName, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -186,7 +159,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.EquipmentData getEquipmentDataByGUID(string GUID) {
             if (instance.EquipmentDataGUID_To_AssetID.TryGetValue(GUID, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -200,7 +173,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.StatData getStatDataByDisplayName(string DisplayName) {
             if (instance.StatDataDisplayName_To_AssetID.TryGetValue(DisplayName, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -214,7 +187,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.StatData getStatDataByName(string InternalName) {
             if (instance.StatDataName_To_AssetID.TryGetValue(InternalName, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -228,7 +201,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.StatData getStatDataByGUID(string GUID) {
             if (instance.StatDataGUID_To_AssetID.TryGetValue(GUID, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -242,7 +215,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.StatusEffectData getStatusEffectDataByDisplayName(string DisplayName) {
             if (instance.StatusEffectDataDisplayName_To_AssetID.TryGetValue(DisplayName, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -256,7 +229,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.StatusEffectData getStatusEffectDataByName(string InternalName) {
             if (instance.StatusEffectDataName_To_AssetID.TryGetValue(InternalName, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);
@@ -270,7 +243,7 @@ namespace InkboundModEnabler {
         }
         public static ShinyShoe.Ares.SharedSOs.StatusEffectData getStatusEffectDataByGUID(string GUID) {
             if (instance.StatusEffectDataGUID_To_AssetID.TryGetValue(GUID, out var assetID)) {
-                foreach (var lib in assetLibraryList) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
                     var manifest = lib._assetIDToEntry[assetID];
                     if (manifest != null) {
                         var asset = lib.GetOrLoadAsset(manifest);

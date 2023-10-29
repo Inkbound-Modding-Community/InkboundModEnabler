@@ -19,7 +19,7 @@ namespace InkboundModEnabler.Vestiges {
             [HarmonyPatch(nameof(AssetLibrary.Initialize))]
             [HarmonyPrefix]
             public static void Initialize_Pre(AssetLibrary __instance) {
-                VestigeUtils.assetLibraryList.Add(__instance);
+                AssetLibUtils.assetLibraryList.Add(__instance);
                 if (needsInitFiles && InkboundModEnabler.settings.checkForCustomVestiges.Value) {
                     needsInitFiles = false;
                     foreach (var file in Directory.GetFiles(TemplateVestigeCreator.customVestigePath, "*Vestige*.*", SearchOption.AllDirectories)) {
@@ -101,19 +101,6 @@ namespace InkboundModEnabler.Vestiges {
                             }
                         }
                     }
-                }
-            }
-        }
-        // I'm unsure why exactly this method; the me from half an hour ago thought this was a good spot and who am I to doubt him?
-        [HarmonyPatch(typeof(AddressablesImpl))]
-        public static class AddressablesImpl_Patch {
-            [HarmonyPatch(nameof(AddressablesImpl.InitializeAsync), new Type[] { typeof(string), typeof(string), typeof(bool) })]
-            [HarmonyPostfix]
-            public static void InitializeAsync(AddressablesImpl __instance) {
-                if (InkboundModEnabler.settings.checkForCustomVestiges.Value) {
-                    InkboundModEnabler.log.LogInfo("Initializing CustomIcon Infrastructure.");
-                    __instance.ResourceManager.ResourceProviders.Add(new CustomIconProvider());
-                    __instance.AddResourceLocator(CustomIconLocator.instance);
                 }
             }
         }

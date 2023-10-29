@@ -28,6 +28,10 @@ Inkbound/
 └── Inkbound_BurstDebugInformation_DoNotShip/
 
 ### Changelog:
+## Version 1.2.4 (Early Access Patch 0.3.0)
+- (***Bubbles***): Add some Unity Extensions
+- Code Cleanup
+
 ## Version 1.2.3 (Early Access Patch 0.3.0)
 - (***Bubbles***): Compatability with game version 0.3.0.
 
