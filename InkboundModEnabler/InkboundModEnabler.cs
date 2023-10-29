@@ -8,6 +8,7 @@ using Mono.Net.Security;
 using Mono.Unity;
 using ShinyShoe;
 using ShinyShoe.AnalyticsTracking;
+using ShinyShoe.Ares;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace InkboundModEnabler {
         public static InkboundModEnabler instance;
         public static Settings settings;
         public static ConfigFile conf;
+        public static WorldServer worldServer;
         public static Harmony HarmonyInstance => new Harmony(PLUGIN_GUID);
         private void Awake() {
             try {
@@ -100,6 +102,16 @@ IL_6E:
             public static bool DoesThisBuildReportErrors(ref bool __result) {
                 __result = false;
                 return false;
+            }
+        }
+        #endregion
+        #region HelpfulAccess
+        [HarmonyPatch(typeof(WorldServer))]
+        public static class WorldServer_Patch {
+            [HarmonyPatch(nameof(WorldServer.Update))]
+            [HarmonyPostfix]
+            public static void Update(WorldServer __instance) {
+                worldServer = __instance;
             }
         }
         #endregion
