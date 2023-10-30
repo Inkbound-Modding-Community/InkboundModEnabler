@@ -39,7 +39,6 @@ namespace InkboundModEnabler.Vestiges {
             [HarmonyPriority(Priority.VeryHigh)]
             [HarmonyPostfix]
             public static void Initialize_Post(AssetLibrary __instance) {
-                var loc = ClientApp.Inst._applicationState.GetLocalizationRo();
                 foreach (var pair in __instance._baseDataTypeToEntries) {
                     if (pair.Key == typeof(ShinyShoe.Ares.SharedSOs.VestigeSetData)) {
                         foreach (var item in pair.Value) {
