@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using InkboundModEnabler.Vestiges;
+using ShinyShoe;
 using ShinyShoe.SharedDataLoader;
 using System;
 using System.Collections.Generic;
@@ -255,6 +256,48 @@ namespace InkboundModEnabler {
             }
             return null;
         }
+        public static ShinyShoe.Ares.SharedSOs.VestigeSetData getVestigeSetDataByDisplayName(string DisplayName) {
+            if (instance.VestigeSetDataDisplayName_To_AssetID.TryGetValue(DisplayName, out var assetID)) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
+                    var manifest = lib._assetIDToEntry[assetID];
+                    if (manifest != null) {
+                        var asset = lib.GetOrLoadAsset(manifest);
+                        if (asset is ShinyShoe.Ares.SharedSOs.VestigeSetData ret) {
+                            return ret;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+        public static ShinyShoe.Ares.SharedSOs.VestigeSetData getVestigeSetDataByName(string InternalName) {
+            if (instance.VestigeSetDataName_To_AssetID.TryGetValue(InternalName, out var assetID)) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
+                    var manifest = lib._assetIDToEntry[assetID];
+                    if (manifest != null) {
+                        var asset = lib.GetOrLoadAsset(manifest);
+                        if (asset is ShinyShoe.Ares.SharedSOs.VestigeSetData ret) {
+                            return ret;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+        public static ShinyShoe.Ares.SharedSOs.VestigeSetData getVestigeSetDataByGUID(string GUID) {
+            if (instance.VestigeSetDataGUID_To_AssetID.TryGetValue(GUID, out var assetID)) {
+                foreach (var lib in AssetLibUtils.assetLibraryList) {
+                    var manifest = lib._assetIDToEntry[assetID];
+                    if (manifest != null) {
+                        var asset = lib.GetOrLoadAsset(manifest);
+                        if (asset is ShinyShoe.Ares.SharedSOs.VestigeSetData ret) {
+                            return ret;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
         #endregion
         #region internal
         public sealed class VestigeDataContainer {
@@ -271,8 +314,66 @@ namespace InkboundModEnabler {
             public Dictionary<string, AssetID> StatusEffectDataName_To_AssetID = new();
             public Dictionary<string, AssetID> StatusEffectDataDisplayName_To_AssetID = new();
             public Dictionary<string, AssetID> StatusEffectDataGUID_To_AssetID = new();
+            public Dictionary<string, AssetID> VestigeSetDataName_To_AssetID = new();
+            public Dictionary<string, AssetID> VestigeSetDataDisplayName_To_AssetID = new();
+            public Dictionary<string, AssetID> VestigeSetDataGUID_To_AssetID = new();
             public Dictionary<string, List<string>> CustomVestigesByAssembly = new();
             public HashSet<string> CustomVestigeGUIDs = new();
+            public void dump() {
+                var loc = ClientApp.Inst._applicationState.GetLocalizationRo();
+                InkboundModEnabler.log.LogInfo("---------------------------------------------");
+                InkboundModEnabler.log.LogInfo("VestigeSetDatas:");
+                foreach (var dumpObject in VestigeUtils.instance.VestigeSetDataGUID_To_AssetID) {
+                    var setData = VestigeUtils.getVestigeSetDataByGUID(dumpObject.Key);
+                    var dp = setData.NameKey.IsNullOrWhiteSpace() ? "@" : loc.Localize(setData.NameKey);
+                    var guid = setData.Guid.IsNullOrWhiteSpace() ? "@" : setData.Guid;
+                    var inName = setData.name.IsNullOrWhiteSpace() ? "@" : setData.name;
+                    InkboundModEnabler.log.LogInfo($"{dp} : {guid} : {inName}");
+                }
+                InkboundModEnabler.log.LogInfo("---------------------------------------------");
+                InkboundModEnabler.log.LogInfo("StatDatas:");
+                foreach (var dumpObject in VestigeUtils.instance.StatDataGUID_To_AssetID) {
+                    var statData = VestigeUtils.getStatDataByGUID(dumpObject.Key);
+                    var dp = statData.statName.IsNullOrWhiteSpace() ? "@" : loc.Localize(statData.NameKey);
+                    var guid = statData.Guid.IsNullOrWhiteSpace() ? "@" : statData.Guid;
+                    var inName = statData.name.IsNullOrWhiteSpace() ? "@" : statData.name;
+                    InkboundModEnabler.log.LogInfo($"{dp} : {guid} : {inName}");
+                }
+                InkboundModEnabler.log.LogInfo("---------------------------------------------");
+                InkboundModEnabler.log.LogInfo("EquipmentDatas:");
+                foreach (var dumpObject in VestigeUtils.instance.EquipmentDataGUID_To_AssetID) {
+                    var equip = VestigeUtils.getEquipmentDataByGUID(dumpObject.Key);
+                    var dp = equip.equipmentName.IsNullOrWhiteSpace() ? "@" : loc.Localize(equip.equipmentName);
+                    var guid = equip.Guid.IsNullOrWhiteSpace() ? "@" : equip.Guid;
+                    var inName = equip.name.IsNullOrWhiteSpace() ? "@" : equip.name;
+                    InkboundModEnabler.log.LogInfo($"{dp} : {guid} : {inName}");
+                }
+                InkboundModEnabler.log.LogInfo("---------------------------------------------");
+                InkboundModEnabler.log.LogInfo("LootListDatas:");
+                foreach (var dumpObject in VestigeUtils.instance.LootListGUID_To_AssetID) {
+                    var lootList = VestigeUtils.getLootListDataByGUID(dumpObject.Key);
+                    var guid = lootList.Guid.IsNullOrWhiteSpace() ? "@" : lootList.Guid;
+                    var inName = lootList.name.IsNullOrWhiteSpace() ? "@" : lootList.name;
+                    InkboundModEnabler.log.LogInfo($"{inName} : {guid}");
+                }
+                InkboundModEnabler.log.LogInfo("---------------------------------------------");
+                InkboundModEnabler.log.LogInfo("StatusEffectDatas:");
+                foreach (var dumpObject in VestigeUtils.instance.StatusEffectDataGUID_To_AssetID) {
+                    var statusEffectData = VestigeUtils.getStatusEffectDataByGUID(dumpObject.Key);
+                    var dp = statusEffectData.NameKey.IsNullOrWhiteSpace() ? "@" : loc.Localize(statusEffectData.NameKey);
+                    var guid = statusEffectData.Guid.IsNullOrWhiteSpace() ? "@" : statusEffectData.Guid;
+                    var inName = statusEffectData.name.IsNullOrWhiteSpace() ? "@" : statusEffectData.name;
+                    InkboundModEnabler.log.LogInfo($"{dp} : {guid} : {inName}");
+                }
+                InkboundModEnabler.log.LogInfo("---------------------------------------------");
+                InkboundModEnabler.log.LogInfo("LootTableDatas:");
+                foreach (var dumpObject in VestigeUtils.instance.LootTableGUID_To_AssetID) {
+                    var lootTable = VestigeUtils.getLootTableDataByGUID(dumpObject.Key);
+                    var guid = lootTable.Guid.IsNullOrWhiteSpace() ? "@" : lootTable.Guid;
+                    var inName = lootTable.name.IsNullOrWhiteSpace() ? "@" : lootTable.name;
+                    InkboundModEnabler.log.LogInfo($"{inName} : {guid}");
+                }
+            }
         }
     }
     #endregion

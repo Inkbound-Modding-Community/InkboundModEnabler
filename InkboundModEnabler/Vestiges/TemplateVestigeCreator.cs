@@ -31,6 +31,10 @@ namespace InkboundModEnabler.Vestiges {
                 public int stackCount;
                 public bool isPrimaryAttribute;
             }
+            [Serializable]
+            public class SetData {
+                public string identifier;
+            }
             public string InternalName;
             public string DisplayName;
             public string GUID;
@@ -40,6 +44,7 @@ namespace InkboundModEnabler.Vestiges {
             public int Weight;
             public List<StatChange> statChanges;
             public List<StatusEffect> statusEffects;
+            public List<SetData> setDatas;
         }
         public static void INEEDTEMPLATE() {
             try {
@@ -53,6 +58,7 @@ namespace InkboundModEnabler.Vestiges {
                 v.Weight = 99999;
                 v.statChanges = new();
                 v.statusEffects = new();
+                v.setDatas = new();
                 using (var f = new StreamWriter(Path.Combine(customVestigePath, "MyTestVestige.txt"))) {
                     f.Write(JsonConvert.SerializeObject(v, typeof(TemplateVestige), Formatting.Indented, new()));
                 }
@@ -142,6 +148,16 @@ namespace InkboundModEnabler.Vestiges {
                     ssed.stackCount = effect.stackCount;
                     ssed.isPrimaryAttribute = effect.isPrimaryAttribute;
                     newVestige.statusEffectEntries.StatusEffectEntries.Add(ssed);
+                }
+            }
+            if (!template.setDatas.IsNullOrEmpty()) {
+                foreach (var set in template.setDatas) {
+                    ShinyShoe.Ares.SharedSOs.VestigeSetData vse = VestigeUtils.getVestigeSetDataByDisplayName(set.identifier) ?? VestigeUtils.getVestigeSetDataByName(set.identifier) ?? VestigeUtils.getVestigeSetDataByGUID(set.identifier);
+                    if (vse == null) {
+                        InkboundModEnabler.log.LogWarning($"Custom Vestige {originForLog} references unknown set {set.identifier}!");
+                        continue;
+                    }
+                    newVestige.vestigeSetDatas.Add(vse);
                 }
             }
             if (existing == null) {

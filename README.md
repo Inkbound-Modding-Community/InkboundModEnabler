@@ -28,6 +28,10 @@ Inkbound/
 └── Inkbound_BurstDebugInformation_DoNotShip/
 
 ### Changelog:
+## Version 1.2.5 (Early Access Patch 0.3.0)
+- VestigeTemplate now Supports Vestige Sets
+- Now supports search by display name again (was broken since 0.3.0 replaced DisplayNames with localization Keys)
+
 ## Version 1.2.4 (Early Access Patch 0.3.0)
 - (***Bubbles***): Add some Unity Extensions
 - Code Cleanup

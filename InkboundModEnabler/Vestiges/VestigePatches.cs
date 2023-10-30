@@ -1,13 +1,16 @@
-﻿using HarmonyLib;
+﻿using BepInEx;
+using HarmonyLib;
 using ShinyShoe;
 using ShinyShoe.SharedDataLoader;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine.AddressableAssets;
+using static InkboundModEnabler.Vestiges.TemplateVestigeCreator.TemplateVestige;
 
 namespace InkboundModEnabler.Vestiges {
     public static class VestigePatches {
@@ -36,7 +39,22 @@ namespace InkboundModEnabler.Vestiges {
             [HarmonyPriority(Priority.VeryHigh)]
             [HarmonyPostfix]
             public static void Initialize_Post(AssetLibrary __instance) {
+                var loc = ClientApp.Inst._applicationState.GetLocalizationRo();
                 foreach (var pair in __instance._baseDataTypeToEntries) {
+                    if (pair.Key == typeof(ShinyShoe.Ares.SharedSOs.VestigeSetData)) {
+                        foreach (var item in pair.Value) {
+                            try {
+                                var setData = __instance.GetOrLoadAsset(item) as ShinyShoe.Ares.SharedSOs.VestigeSetData;
+                                VestigeUtils.instance.VestigeSetDataGUID_To_AssetID[setData.Guid] = item.assetID;
+                                VestigeUtils.instance.VestigeSetDataName_To_AssetID[setData.name] = item.assetID;
+                                if (!setData.helperData.NameKey.IsNullOrEmpty()) {
+                                    VestigeUtils.instance.VestigeSetDataDisplayName_To_AssetID[setData.helperData.NameKey] = item.assetID;
+                                }
+                            } catch (Exception e) {
+                                InkboundModEnabler.log.LogError(e.ToString());
+                            }
+                        }
+                    }
                     if (pair.Key == typeof(ShinyShoe.Ares.SharedSOs.EquipmentData)) {
                         foreach (var item in pair.Value) {
                             try {
@@ -77,7 +95,7 @@ namespace InkboundModEnabler.Vestiges {
                         foreach (var item in pair.Value) {
                             try {
                                 var statData = __instance.GetOrLoadAsset(item) as ShinyShoe.Ares.SharedSOs.StatData;
-                                VestigeUtils.instance.StatDataDisplayName_To_AssetID[statData.Guid] = item.assetID;
+                                VestigeUtils.instance.StatDataGUID_To_AssetID[statData.Guid] = item.assetID;
                                 VestigeUtils.instance.StatDataName_To_AssetID[statData.name] = item.assetID;
                                 if (!statData.statName.IsNullOrEmpty()) {
                                     VestigeUtils.instance.StatDataDisplayName_To_AssetID[statData.statName] = item.assetID;
@@ -91,7 +109,7 @@ namespace InkboundModEnabler.Vestiges {
                         foreach (var item in pair.Value) {
                             try {
                                 var statData = __instance.GetOrLoadAsset(item) as ShinyShoe.Ares.SharedSOs.StatusEffectData;
-                                VestigeUtils.instance.StatusEffectDataDisplayName_To_AssetID[statData.Guid] = item.assetID;
+                                VestigeUtils.instance.StatusEffectDataGUID_To_AssetID[statData.Guid] = item.assetID;
                                 VestigeUtils.instance.StatusEffectDataName_To_AssetID[statData.name] = item.assetID;
                                 if (!statData.helperData.NameKey.IsNullOrEmpty()) {
                                     VestigeUtils.instance.StatusEffectDataDisplayName_To_AssetID[statData.helperData.NameKey] = item.assetID;
@@ -106,10 +124,35 @@ namespace InkboundModEnabler.Vestiges {
         }
         [HarmonyPatch(typeof(MainMenuScreenVisual))]
         public static class MainMenuScreenVisual_Patch {
+            public static bool dump = false;
             [HarmonyPatch(nameof(MainMenuScreenVisual.Initialize))]
             [HarmonyPriority(Priority.VeryLow)]
             [HarmonyPostfix]
             public static void Initialize() {
+                var loc = ClientApp.Inst._applicationState.GetLocalizationRo();
+                Dictionary<string, AssetID> tmp = new();
+                foreach (var entry in VestigeUtils.instance.EquipmentDisplayName_To_AssetID) {
+                    tmp[loc.Localize(entry.Key)] = entry.Value;
+                }
+                VestigeUtils.instance.EquipmentDisplayName_To_AssetID = tmp;
+                tmp = new();
+                foreach (var entry in VestigeUtils.instance.StatDataDisplayName_To_AssetID) {
+                    tmp[loc.Localize(entry.Key)] = entry.Value;
+                }
+                VestigeUtils.instance.StatDataDisplayName_To_AssetID = tmp;
+                tmp = new();
+                foreach (var entry in VestigeUtils.instance.StatusEffectDataDisplayName_To_AssetID) {
+                    tmp[loc.Localize(entry.Key)] = entry.Value;
+                }
+                VestigeUtils.instance.StatusEffectDataDisplayName_To_AssetID = tmp;
+                tmp = new();
+                foreach (var entry in VestigeUtils.instance.VestigeSetDataDisplayName_To_AssetID) {
+                    tmp[loc.Localize(entry.Key)] = entry.Value;
+                }
+                VestigeUtils.instance.VestigeSetDataDisplayName_To_AssetID = tmp;
+                if (dump) {
+                    VestigeUtils.instance.dump();
+                }
                 if (InkboundModEnabler.settings.checkForCustomVestiges.Value) {
                     TemplateVestigeCreator.loadCustomVestiges();
                 }
