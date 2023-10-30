@@ -123,7 +123,7 @@ namespace InkboundModEnabler.Vestiges {
         }
         [HarmonyPatch(typeof(MainMenuScreenVisual))]
         public static class MainMenuScreenVisual_Patch {
-            public static bool dump = false;
+            private const bool dump = false;
             [HarmonyPatch(nameof(MainMenuScreenVisual.Initialize))]
             [HarmonyPriority(Priority.VeryLow)]
             [HarmonyPostfix]
