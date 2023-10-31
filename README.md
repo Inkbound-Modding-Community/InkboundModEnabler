@@ -29,7 +29,7 @@ Inkbound/
 
 ### Changelog:
 ## Version 1.2.6 (Early Access Patch 0.3.0)
-- ForceOffline is now initialized later. This prevents prevents the error that the dirty flag is set after initialization which would prevent the mod from copying save files.
+- ForceOffline is now initialized later. This prevents the error that the dirty flag is set after initialization which would prevent the mod from copying save files.
 - Added check to always copy save files if none currently exist.
 
 ## Version 1.2.5 (Early Access Patch 0.3.0)
