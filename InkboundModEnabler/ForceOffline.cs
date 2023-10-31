@@ -1,8 +1,10 @@
 ﻿using BepInEx;
 using HarmonyLib;
 using InkboundModEnabler.Util;
+using InkboundModEnabler.Vestiges;
 using ShinyShoe;
 using ShinyShoe.Ares;
+using ShinyShoe.SharedDataLoader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +26,8 @@ namespace InkboundModEnabler {
         public static void Init() {
             if (!initialized) {
                 initialized = true;
-                if (overwriteSave) {
+                bool separateSaveExists = new FileInfo(persistentPath + @"\latest-player-save").Exists && new FileInfo(persistentPath + @"\save-game").Exists;
+                if (overwriteSave || !separateSaveExists) {
                     UtilityFunctions.CopyDirectory(Application.persistentDataPath + @"\latest-player-save", persistentPath + @"\latest-player-save", true);
                     UtilityFunctions.CopyDirectory(Application.persistentDataPath + @"\save-game", persistentPath + @"\save-game", true);
                 }
@@ -57,7 +60,7 @@ namespace InkboundModEnabler {
             return false;
         }
         [HarmonyPatch(typeof(ClientConfig))]
-        public static class ClientConfig_Patch {
+        internal static class ClientConfig_Patch {
             [HarmonyPatch(nameof(ClientConfig.IsForceOffline))]
             [HarmonyPrefix]
             public static bool IsForceOffline(ref bool __result) {
@@ -69,7 +72,7 @@ namespace InkboundModEnabler {
             }
         }
         [HarmonyPatch(typeof(OfflineModeSystem))]
-        public static class OfflineModeSystem_Patch {
+        internal static class OfflineModeSystem_Patch {
             [HarmonyPatch(nameof(OfflineModeSystem.Initialize))]
             [HarmonyPrefix]
             public static void Initialize() {
@@ -101,7 +104,7 @@ namespace InkboundModEnabler {
             }
         }
         [HarmonyPatch(typeof(SaveGameSystem))]
-        public static class SaveGameSystem_Patch {
+        internal static class SaveGameSystem_Patch {
             [HarmonyPatch(nameof(SaveGameSystem.GetFullSaveGameTopDir))]
             [HarmonyPrefix]
             public static bool GetFullSaveGameTopDir(ref string __result) {
@@ -110,6 +113,20 @@ namespace InkboundModEnabler {
                     return false;
                 }
                 return true;
+            }
+        }
+        [HarmonyPatch(typeof(AssetLibrary))]
+        internal static class AssetLibarary_Patch {
+            public static bool needsInitFiles = true;
+            [HarmonyPatch(nameof(AssetLibrary.Initialize))]
+            [HarmonyPriority(50)]
+            [HarmonyPostfix]
+            public static void Initialize() {
+                if (TemplateVestigeCreator.filesToCheck.Count > 0) {
+                    saveIsDirty = true;
+                    InkboundModEnabler.log.LogWarning("Set needForceOffline to true because possible Custom Vestiges were detected and checkForCustomVestiges is enabled.");
+                    Init();
+                };
             }
         }
     }

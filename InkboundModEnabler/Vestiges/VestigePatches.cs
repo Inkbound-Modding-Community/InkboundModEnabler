@@ -10,14 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine.AddressableAssets;
-using static InkboundModEnabler.Vestiges.TemplateVestigeCreator.TemplateVestige;
 
 namespace InkboundModEnabler.Vestiges {
     public static class VestigePatches {
 
         // Initialize the Vestige caches to allow lookup by name/guid
         [HarmonyPatch(typeof(AssetLibrary))]
-        public static class AssetLibarary_Patch {
+        internal static class AssetLibarary_Patch {
             public static bool needsInitFiles = true;
             [HarmonyPatch(nameof(AssetLibrary.Initialize))]
             [HarmonyPrefix]
@@ -27,10 +26,6 @@ namespace InkboundModEnabler.Vestiges {
                     needsInitFiles = false;
                     foreach (var file in Directory.GetFiles(TemplateVestigeCreator.customVestigePath, "*Vestige*.*", SearchOption.AllDirectories)) {
                         if (file.EndsWith("png") || file.EndsWith("jpg")) continue;
-                        if (!ForceOffline.saveIsDirty) {
-                            ForceOffline.saveIsDirty = true;
-                            InkboundModEnabler.log.LogWarning("Set needForceOffline to true because possible Custom Vestiges were detected and checkForCustomVestiges is enabled.");
-                        };
                         TemplateVestigeCreator.filesToCheck.Add(file);
                     }
                 }
@@ -122,7 +117,7 @@ namespace InkboundModEnabler.Vestiges {
             }
         }
         [HarmonyPatch(typeof(MainMenuScreenVisual))]
-        public static class MainMenuScreenVisual_Patch {
+        internal static class MainMenuScreenVisual_Patch {
             private const bool dump = false;
             [HarmonyPatch(nameof(MainMenuScreenVisual.Initialize))]
             [HarmonyPriority(Priority.VeryLow)]

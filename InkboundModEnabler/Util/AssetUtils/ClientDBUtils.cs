@@ -16,7 +16,7 @@ namespace InkboundModEnabler {
             CustomAssetLocator.instance.assetGUIDToPath[GUID] = path;
         }
         [HarmonyPatch(typeof(AddressablesImpl))]
-        public static class AddressablesImpl_Patch {
+        internal static class AddressablesImpl_Patch {
             [HarmonyPatch(nameof(AddressablesImpl.InitializeAsync), new Type[] { typeof(string), typeof(string), typeof(bool) })]
             [HarmonyPostfix]
             public static void InitializeAsync(AddressablesImpl __instance) {

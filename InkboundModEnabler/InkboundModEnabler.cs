@@ -23,7 +23,7 @@ namespace InkboundModEnabler {
     class InkboundModEnabler : BaseUnityPlugin {
         public const string PLUGIN_GUID = "InkboundModEnabler";
         public const string PLUGIN_NAME = "Inkbound Mod Enabler";
-        public const string PLUGIN_VERSION = "1.2.5";
+        public const string PLUGIN_VERSION = "1.2.6";
         public static ManualLogSource log;
         public static InkboundModEnabler instance;
         public static Settings settings;
@@ -38,7 +38,6 @@ namespace InkboundModEnabler {
                 settings = new();
                 EnsureDirectories();
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
-                ForceOffline.Init();
             } catch (Exception e) {
                 log.LogError(e);
             }
@@ -54,7 +53,7 @@ namespace InkboundModEnabler {
         #region ModEnablerPatches
         // Make unstripped assemblies work
         [HarmonyPatch(typeof(Mono.Net.Security.MonoTlsProviderFactory))]
-        public static class MonoTlsProviderFactory_Patch {
+        internal static class MonoTlsProviderFactory_Patch {
             [HarmonyPatch(nameof(Mono.Net.Security.MonoTlsProviderFactory.CreateDefaultProviderImpl))]
             [HarmonyPrefix]
             public static bool CreateDefaultProviderImpl(ref MobileTlsProvider __result) {
@@ -87,7 +86,7 @@ IL_6E:
         }
         // Disable Analytics
         [HarmonyPatch(typeof(AnalyticsHelper))]
-        public static class AnalyticsHelper_Patch {
+        internal static class AnalyticsHelper_Patch {
             [HarmonyPatch(nameof(AnalyticsHelper.Configure))]
             [HarmonyPrefix]
             public static bool Configure() {
@@ -97,7 +96,7 @@ IL_6E:
         }
         // Disable Crash Reports
         [HarmonyPatch(typeof(ErrorTrackingState))]
-        public static class ErrorTrackingState_Patch {
+        internal static class ErrorTrackingState_Patch {
             [HarmonyPatch(nameof(ErrorTrackingState.DoesThisBuildReportErrors))]
             public static bool DoesThisBuildReportErrors(ref bool __result) {
                 __result = false;
@@ -107,7 +106,7 @@ IL_6E:
         #endregion
         #region HelpfulAccess
         [HarmonyPatch(typeof(WorldServer))]
-        public static class WorldServer_Patch {
+        internal static class WorldServer_Patch {
             [HarmonyPatch(nameof(WorldServer.Update))]
             [HarmonyPostfix]
             public static void Update(WorldServer __instance) {
