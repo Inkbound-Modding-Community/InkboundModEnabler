@@ -117,16 +117,17 @@ namespace InkboundModEnabler {
         }
         [HarmonyPatch(typeof(AssetLibrary))]
         internal static class AssetLibarary_Patch {
-            public static bool needsInitFiles = true;
             [HarmonyPatch(nameof(AssetLibrary.Initialize))]
             [HarmonyPriority(50)]
             [HarmonyPostfix]
             public static void Initialize() {
-                if (TemplateVestigeCreator.filesToCheck.Count > 0) {
-                    saveIsDirty = true;
-                    InkboundModEnabler.log.LogWarning("Set needForceOffline to true because possible Custom Vestiges were detected and checkForCustomVestiges is enabled.");
-                    Init();
-                };
+                if (!initialized) {
+                    if (TemplateVestigeCreator.filesToCheck.Count > 0) {
+                        saveIsDirty = true;
+                        InkboundModEnabler.log.LogWarning("Set needForceOffline to true because possible Custom Vestiges were detected and checkForCustomVestiges is enabled.");
+                        Init();
+                    };
+                }
             }
         }
     }
