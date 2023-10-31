@@ -26,7 +26,7 @@ namespace InkboundModEnabler {
         public static void Init() {
             if (!initialized) {
                 initialized = true;
-                bool separateSaveExists = new FileInfo(persistentPath + @"\latest-player-save").Exists && new FileInfo(persistentPath + @"\save-game").Exists;
+                bool separateSaveExists = new DirectoryInfo(persistentPath + @"\latest-player-save").Exists && new DirectoryInfo(persistentPath + @"\save-game").Exists;
                 if (overwriteSave || !separateSaveExists) {
                     UtilityFunctions.CopyDirectory(Application.persistentDataPath + @"\latest-player-save", persistentPath + @"\latest-player-save", true);
                     UtilityFunctions.CopyDirectory(Application.persistentDataPath + @"\save-game", persistentPath + @"\save-game", true);
