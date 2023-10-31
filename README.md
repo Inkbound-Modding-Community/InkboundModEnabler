@@ -72,64 +72,46 @@ Inkbound/
 - Initial Release.
 
 ### Config
-\#\# Plugin GUID: InkboundModEnabler
+```cfg
+## Settings file was created by plugin Inkbound Mod Enabler v1.2.6
+## Plugin GUID: InkboundModEnabler
 
 [Custom Content]
 
-\#\# This is where the mod will use as root to search for new Vestiges and as base path for their icons.
+## This is where the mod will use as root to search for new Vestiges and as base path for their icons. This automatically defaults to the game directory when you first start the game.
+# Setting type: String
+# Default value: C:Your\Path\To\Steam\steamapps\common\Inkbound\BepInEx\custom\Vestiges
+customVestigeRootDirectory = C:Your\Path\To\Steam\steamapps\common\Inkbound\BepInEx\custom\Vestiges
 
-\# Setting type: String
-
-\# Default value: D:\Games\Steam\steamapps\common\Inkbound\BepInEx\custom\Vestiges
-
-customVestigeRootDirectory = D:\Games\Steam\steamapps\common\Inkbound\BepInEx\custom\Vestiges
-
-\#\# Disable this to ignore possible existing custom Vestiges in the customVestigeRootDirectors.
-
-\# Setting type: Boolean
-
-\# Default value: true
-
+## Disable this to ignore possible existing custom Vestiges in the customVestigeRootDirectors.
+# Setting type: Boolean
+# Default value: true
 checkForCustomVestiges = true
 
 [Force Offline]
 
-\#\# Force the game to start in offline mode
-
-\# Setting type: Boolean
-\# Default value: false
-
+## Force the game to start in offline mode
+# Setting type: Boolean
+# Default value: false
 ForceOfflineMode = false
 
-\#\# This is where Force Offline will save your offline runs when it is turned on.
+## This is where Force Offline will save your offline runs when it is turned on. This automatically defaults to the game directory when you first start the game.
+# Setting type: String
+# Default value: C:Your\Path\To\Steam\steamapps\common\Inkbound\BepInEx\plugins\InkboundModEnabler\persistent_data
+persistentPath = C:Your\Path\To\Steam\steamapps\common\Inkbound\BepInEx\plugins\InkboundModEnabler\persistent_data
 
-\# Setting type: String
-
-\# Default value: D:\Games\Steam\steamapps\common\Inkbound\BepInEx\plugins\InkboundModEnabler\persistent_data
-
-persistentPath = D:\Games\Steam\steamapps\common\Inkbound\BepInEx\plugins\InkboundModEnabler\persistent_data
-
-\#\# Keep offline saves separate from normal. This allows having offline and online mode to keep track of different progression. This is forced behaviour when using non-cosmetic mods. Best used with OverwriteOfflineSave set to false
-
-\# Setting type: Boolean
-
-\# Default value: false
-
+## Keep offline saves separate from normal. This allows having offline and online mode to keep track of different progression. This is forced behaviour when using non-cosmetic mods. Best used with OverwriteOfflineSave set to false
+# Setting type: Boolean
+# Default value: false
 UseSeparateOfflineSave = false
 
-\#\# If UseSeparateOfflineSave is enabled, setting this to false prevents the mod from overwriting the offline save with online saves, basically treating offline and online as two separate profiles.
+## If UseSeparateOfflineSave is enabled, setting this to false prevents the mod from overwriting the offline save with online saves, basically treating offline and online as two separate profiles.
+# Setting type: Boolean
+# Default value: true
+OverwriteOfflineSave = true
 
-\# Setting type: Boolean
-
-\# Default value: true
-
-\OverwriteOfflineSave = true
-
-\#\# Ignored if OverwriteOfflineSave is false. If this is enabled then offline saves will be overwritten even if there is a paused run in the offline save.
-
-\# Setting type: Boolean
-
-\# Default value: false
-
+## Ignored if OverwriteOfflineSave is false. If this is enabled then offline saves will be overwritten even if there is a paused run in the offline save.
+# Setting type: Boolean
+# Default value: false
 OverwriteSavedOfflineRun = false
-
+```
