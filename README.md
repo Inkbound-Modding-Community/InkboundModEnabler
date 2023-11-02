@@ -28,6 +28,10 @@ Inkbound/
 └── Inkbound_BurstDebugInformation_DoNotShip/
 
 ### Changelog:
+## Version 1.2.8 (Early Access Patch 0.3.1)
+- Fixed bugged Force Offline initialization (only worked with Custom Vestiges).
+- Made patches more granular to try and be more resistent to future updates breaking stuff.
+
 ## Version 1.2.7 (Early Access Patch 0.3.1)
 - Recompiled for new version.
 

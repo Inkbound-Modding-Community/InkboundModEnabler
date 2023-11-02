@@ -12,6 +12,7 @@ using ShinyShoe.Ares;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -23,13 +24,13 @@ namespace InkboundModEnabler {
     class InkboundModEnabler : BaseUnityPlugin {
         public const string PLUGIN_GUID = "InkboundModEnabler";
         public const string PLUGIN_NAME = "Inkbound Mod Enabler";
-        public const string PLUGIN_VERSION = "1.2.7";
-        public static ManualLogSource log;
+        public const string PLUGIN_VERSION = "1.2.8";
+        internal static ManualLogSource log;
         public static InkboundModEnabler instance;
         public static Settings settings;
         public static ConfigFile conf;
         public static WorldServer worldServer;
-        public static readonly Harmony HarmonyInstance = new Harmony(PLUGIN_GUID);
+        internal static readonly Harmony HarmonyInstance = new Harmony(PLUGIN_GUID);
         private void Awake() {
             try {
                 instance = this;
@@ -37,9 +38,11 @@ namespace InkboundModEnabler {
                 conf = Config;
                 settings = new();
                 EnsureDirectories();
-                HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
+                PatchEnablerPatches();
+                ForceOffline.PatchForceOfflinePatches();
+                HarmonyInstance.PatchAll();
             } catch (Exception e) {
-                log.LogError(e);
+                log.LogFatal(e);
             }
         }
         private void Update() {
@@ -51,12 +54,27 @@ namespace InkboundModEnabler {
             if (!vestiges.Exists) vestiges.Create();
         }
         #region ModEnablerPatches
-        // Make unstripped assemblies work
-        [HarmonyPatch(typeof(Mono.Net.Security.MonoTlsProviderFactory))]
+        internal static void PatchEnablerPatches() {
+            // Make unstripped assemblies work
+            var original = AccessTools.Method(typeof(Mono.Net.Security.MonoTlsProviderFactory), nameof(Mono.Net.Security.MonoTlsProviderFactory.CreateDefaultProviderImpl));
+            var prefix = AccessTools.Method(typeof(MonoTlsProviderFactory_Patch), nameof(MonoTlsProviderFactory_Patch.CreateDefaultProviderImpl));
+            HarmonyInstance.Patch(original, new HarmonyMethod(prefix));
+            try {
+                // Disable Analytics
+                original = AccessTools.Method(typeof(AnalyticsHelper), nameof(AnalyticsHelper.Configure));
+                prefix = AccessTools.Method(typeof(AnalyticsHelper_Patch), nameof(AnalyticsHelper_Patch.Configure));
+                HarmonyInstance.Patch(original, new HarmonyMethod(prefix));
+                // Disable Crash Reports
+                original = AccessTools.Method(typeof(ErrorTrackingState), nameof(ErrorTrackingState.DoesThisBuildReportErrors));
+                prefix = AccessTools.Method(typeof(ErrorTrackingState_Patch), nameof(ErrorTrackingState.DoesThisBuildReportErrors));
+                HarmonyInstance.Patch(original, new HarmonyMethod(prefix));
+            } // Crash Reports and Analytics are non-essential patches
+            catch (Exception ex) {
+                log.LogError(ex);
+            }
+        }
         internal static class MonoTlsProviderFactory_Patch {
-            [HarmonyPatch(nameof(Mono.Net.Security.MonoTlsProviderFactory.CreateDefaultProviderImpl))]
-            [HarmonyPrefix]
-            public static bool CreateDefaultProviderImpl(ref MobileTlsProvider __result) {
+            internal static bool CreateDefaultProviderImpl(ref MobileTlsProvider __result) {
                 string text = Environment.GetEnvironmentVariable("MONO_TLS_PROVIDER");
                 if (string.IsNullOrEmpty(text)) {
                     text = "default";
@@ -84,21 +102,14 @@ IL_6E:
                 return false;
             }
         }
-        // Disable Analytics
-        [HarmonyPatch(typeof(AnalyticsHelper))]
         internal static class AnalyticsHelper_Patch {
-            [HarmonyPatch(nameof(AnalyticsHelper.Configure))]
-            [HarmonyPrefix]
-            public static bool Configure() {
+            internal static bool Configure() {
                 Analytics.EnableTracking(false);
                 return false;
             }
         }
-        // Disable Crash Reports
-        [HarmonyPatch(typeof(ErrorTrackingState))]
         internal static class ErrorTrackingState_Patch {
-            [HarmonyPatch(nameof(ErrorTrackingState.DoesThisBuildReportErrors))]
-            public static bool DoesThisBuildReportErrors(ref bool __result) {
+            internal static bool DoesThisBuildReportErrors(ref bool __result) {
                 __result = false;
                 return false;
             }
